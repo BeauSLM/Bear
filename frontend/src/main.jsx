@@ -1,7 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
+import ActivitySummary from './components/ActivitySummary.jsx'
 import './index.css'
+
+import dayjs from 'dayjs';
 
 import {
   createBrowserRouter,
@@ -16,6 +19,10 @@ const router = createBrowserRouter([
   {
     path: "/home",
     element: <App />
+  },
+  {
+    path: "/temp",
+    element: <ActivitySummary location="here" time={dayjs('1990-01-01')} />
   },
 ]);
 
