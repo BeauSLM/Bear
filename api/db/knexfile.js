@@ -1,15 +1,13 @@
-
-require('dotenv').config({path: '../.env'});
-
+// TODO: connection config for dev and prod
 module.exports = {
-    development: {
-        client: 'mysql2',
-        connection: process.env.DATABASE_URL,
-        migrations: {
-            directory: __dirname + '/migrations'
-        },
-        seeds: {
-            directory: __dirname + '/seeds'
-        }
-    }
+  client: "better-sqlite3",
+  connection: {
+    filename: __dirname + "/dev.sqlite3",
+    migrations: {
+      directory: __dirname + "/migrations",
+    },
+    seeds: {
+      directory: __dirname + "/seeds",
+    },
+  },
 };
