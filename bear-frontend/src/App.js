@@ -1,0 +1,148 @@
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import Header from './BearHeader';
+import CommunityCard from './CommunityCard';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+const App = () => {
+
+    const userActivity = [
+        { forum: "Forum One", time: "2 hours ago" },
+        { forum: "Forum Two", time: "3 days ago" },
+    ];
+
+    const ForumActivity = [
+        { forum: "Thread One", time: "2 hours ago" },
+        { forum: "Thread Two", time: "3 days ago" },
+    ];
+
+    return (
+        <Router>
+            <div className="container">
+                <Header />
+                <Routes>
+                    <Route path="/" element={
+                        <>
+                            <div className="card mb-4 shadow-sm">
+                                <div className="card-header">
+                                    <h4>Popular Communities</h4>
+                                </div>
+                                <div className="card-body">
+                                    <div className="row">
+                                        <CommunityCard
+                                            name="Community Name"
+                                            description="Add a short description about your community here"
+                                            subscribed={4}
+                                            threads={138}
+                                            userActivity={userActivity}
+                                        />
+                                        <CommunityCard
+                                            name="Community Name"
+                                            description="Add a short description about your community here"
+                                            subscribed={4}
+                                            threads={138}
+                                            userActivity={userActivity}
+                                        />
+                                        <CommunityCard
+                                            name="Community Name"
+                                            description="Add a short description about your community here"
+                                            subscribed={4}
+                                            threads={138}
+                                            userActivity={userActivity}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="card mb-4 shadow-sm">
+                                <div className="card-header">
+                                    <h4>Newest Communities</h4>
+                                </div>
+                                <div className="card-body">
+                                    <div className="row">
+                                        <CommunityCard
+                                            name="Community Name"
+                                            description="Add a short description about your community here"
+                                            subscribed={2}
+                                            threads={9730}
+                                            userActivity={userActivity}
+                                        />
+                                        <CommunityCard
+                                            name="Community Name"
+                                            description="Add a short description about your community here"
+                                            subscribed={4}
+                                            threads={138}
+                                            userActivity={userActivity}
+                                        />
+                                        <CommunityCard
+                                            name="Community Name"
+                                            description="Add a short description about your community here"
+                                            subscribed={4}
+                                            threads={138}
+                                            userActivity={userActivity}
+                                        />
+                                        {/* Additional CommunityCard components */}
+                                    </div>
+                                </div>
+                            </div>
+                        </>
+                    } />
+
+                    {/* Corrected Route for the user profile page */}
+                    <Route path="/community" element={
+                        <>
+                            <div className="card mb-4 shadow-sm">
+                                <div className="card-header">
+                                    <h4>Category 1</h4>
+                                </div>
+                                <div className="card-body">
+                                    <div className="row">
+                                        <CommunityCard
+                                            name="Forum Name"
+                                            description="Add a short description about your Forum here"
+                                            subscribed={4}
+                                            threads={138}
+                                            userActivity={ForumActivity}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="card mb-4 shadow-sm">
+                                <div className="card-header">
+                                    <h4>Category 2</h4>
+                                </div>
+                                <div className="card-body">
+                                    <div className="row">
+                                        <CommunityCard
+                                            name="Forum Name"
+                                            description="Add a short description about your community here"
+                                            subscribed={2}
+                                            threads={9730}
+                                            userActivity={ForumActivity}
+                                        />
+                                        <CommunityCard
+                                            name="Forum Name"
+                                            description="Add a short description about your community here"
+                                            subscribed={2}
+                                            threads={9730}
+                                            userActivity={ForumActivity}
+                                        />
+                                        <CommunityCard
+                                            name="Forum Name"
+                                            description="Add a short description about your community here"
+                                            subscribed={2}
+                                            threads={9730}
+                                            userActivity={ForumActivity}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </>
+                    } />
+                </Routes>
+                <Link to="/community">Go to User Profile</Link>
+            </div>
+        </Router>
+    );
+};
+
+export default App;
