@@ -1,5 +1,5 @@
 exports.up = function(knex, Promise) {
-    return knex.schema.createTable('communities', function(table) {
+    return knex.schema.createTable('community', function(table) {
         table.increments('id').primary(); // GUID
         table.string('name').notNullable();
         table.string('tagline').notNullable();
@@ -15,5 +15,5 @@ exports.up = function(knex, Promise) {
 };
 
 exports.down = function(knex, Promise) {
-    return knex.schema.dropTable('communities');
+    return knex.schema.dropTable('community');
 }
