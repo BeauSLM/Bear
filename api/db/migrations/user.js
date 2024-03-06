@@ -1,4 +1,3 @@
-
 exports.up = function(knex, Promise) {
     return knex.schema.createTable('user', function(table) {
         table.increments('id').primary(); // GUID
@@ -14,5 +13,5 @@ exports.up = function(knex, Promise) {
 };
 
 exports.down = function(knex, Promise) {
-    return knex.schema.dropTable('users');
+    return knex.schema.dropTable('user');
 }
