@@ -22,8 +22,13 @@ app.get('/users', async (req, res) => {
 
 // community_mod stuff
 app.get('/community_mod', async (req, res) => {
-  const communityMod = await db.select().from('community_mod');
-  res.json(communityMod);
+  try{
+    const communityMod = await db.select().from('community_mod');
+    res.json(communityMod);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error fetching community mods');
+  }
 });
 
 app.get('/community_mod/:communityId/:userId', async (req, res) => {
@@ -49,8 +54,13 @@ app.get('/community_mod/:communityId/:userId', async (req, res) => {
 
 app.post('/community_mod', async (req, res) => {
   const newCommunityMod = req.body;
-  await db('community_mod').insert(newCommunityMod);
-  res.send('Community Mod created successfully');
+  try{
+    await db('community_mod').insert(newCommunityMod);
+    res.send('Community Mod created successfully');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error posting community mod');
+  }
 });
 
 app.delete('/community_mod/:communityId/:userId', async (req, res) => {
