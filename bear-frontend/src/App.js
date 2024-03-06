@@ -1,10 +1,15 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Header from './BearHeader';
 import CommunityCard from './CommunityCard';
+import ForumCard from './ForumCard';
+import ThreadCard from './ThreadCard';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import BackButton from './BackButton';
+import Thread from './Thread';
 
 const App = () => {
+
 
     const userActivity = [
         { forum: "Forum One", time: "2 hours ago" },
@@ -14,6 +19,11 @@ const App = () => {
     const ForumActivity = [
         { forum: "Thread One", time: "2 hours ago" },
         { forum: "Thread Two", time: "3 days ago" },
+    ];
+
+    const threads = [
+        { name: "Thread Name 1", userName: "3p1cUser140", threadDate: "Feb 14, 2024", lastPostDate: "4 days ago" },
+        { name: "Thread Name 2", userName: "3p1cUser140", threadDate: "Feb 15, 2024", lastPostDate: "5 days ago" },
     ];
 
     return (
@@ -90,13 +100,15 @@ const App = () => {
                     {/* Corrected Route for the user profile page */}
                     <Route path="/community" element={
                         <>
+                            <BackButton
+                                destination={""} />
                             <div className="card mb-4 shadow-sm">
                                 <div className="card-header">
                                     <h4>Category 1</h4>
                                 </div>
                                 <div className="card-body">
                                     <div className="row">
-                                        <CommunityCard
+                                        <ForumCard
                                             name="Forum Name"
                                             description="Add a short description about your Forum here"
                                             subscribed={4}
@@ -112,23 +124,23 @@ const App = () => {
                                 </div>
                                 <div className="card-body">
                                     <div className="row">
-                                        <CommunityCard
+                                        <ForumCard
                                             name="Forum Name"
                                             description="Add a short description about your community here"
                                             subscribed={2}
                                             threads={9730}
                                             userActivity={ForumActivity}
                                         />
-                                        <CommunityCard
+                                        <ForumCard
                                             name="Forum Name"
                                             description="Add a short description about your community here"
                                             subscribed={2}
                                             threads={9730}
                                             userActivity={ForumActivity}
                                         />
-                                        <CommunityCard
+                                        <ForumCard
                                             name="Forum Name"
-                                            description="Add a short description about your community here"
+                                            description="Add a short description about your forum here"
                                             subscribed={2}
                                             threads={9730}
                                             userActivity={ForumActivity}
@@ -137,12 +149,54 @@ const App = () => {
                                 </div>
                             </div>
                         </>
+
+                    } />  <Route path="/threads" element={
+                        <>
+                            <div className="card mb-4 shadow-sm">
+                                <div className="card-header">
+                                    <BackButton
+                                        destination={"community"} />
+                                    <h4>Thread List</h4>
+                                </div>
+                                <div className="card-body">
+                                    {threads.map((thread, index) => (
+                                        <ThreadCard
+                                            key={index}
+                                            threadName={thread.name}
+                                            userName={thread.userName}
+                                            threadDate={thread.threadDate}
+                                            lastPostDate={thread.lastPostDate}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+                        </>
+                    } />
+                    <Route path="/thread" element={
+                        <>
+                            <div className="card mb-4 shadow-sm">
+                                <div className="card-header">
+                                    <BackButton
+                                        destination={"threads"} />
+                                    <h4>Thread</h4>
+                                </div>
+                                <div className="card-body">
+                                    {threads.map((thread, index) => (
+                                        <Thread
+                                            key={index}
+                                            userName={thread.userName}
+                                            lastPostDate={thread.lastPostDate}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+                        </>
                     } />
                 </Routes>
-                <Link to="/community">Go to User Profile</Link>
             </div>
         </Router>
     );
 };
 
 export default App;
+

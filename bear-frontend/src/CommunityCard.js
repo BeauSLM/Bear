@@ -1,6 +1,13 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const CommunityCard = ({ name, description, subscribed, threads, userActivity }) => {
+
+    const navigate = useNavigate();
+    const handleViewCommunityClick = () => {
+        navigate('/community');
+    };
+
     return (
         <div className="card mb-2 shadow-sm">
             <div className="card-body p-2">
@@ -34,7 +41,7 @@ const CommunityCard = ({ name, description, subscribed, threads, userActivity })
 
             <div className="card-footer text-muted p-2">
                 <div className="d-flex justify-content-between align-items-center">
-                    <button className="btn btn-sm btn-outline-primary" style={{ fontSize: '0.75rem' }}>View Community</button>
+                    <button className="btn btn-sm btn-outline-primary" style={{ fontSize: '0.75rem' }} onClick={handleViewCommunityClick}>View Community</button>
                     <small className="text-secondary" style={{ fontSize: '0.75rem' }}>Last active: {userActivity[0].time}</small>
                 </div>
             </div>
