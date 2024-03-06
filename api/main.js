@@ -469,7 +469,7 @@ app.delete('/reply_like/:threadId/:replyId/:userId', async (req, res) => {
 // reply 
 
 // Read all replies
-app.get('/replies', async (req, res) => {
+app.get('/reply', async (req, res) => {
   try {
     const replies = await db.select().from('reply');
     res.json(replies);
@@ -480,7 +480,7 @@ app.get('/replies', async (req, res) => {
 });
 
 // Read a specific reply by thread_id and reply_id
-app.get('/replies/:threadId/:replyId', async (req, res) => {
+app.get('/reply/:threadId/:replyId', async (req, res) => {
   const { threadId, replyId } = req.params;
   
   try {
@@ -502,7 +502,7 @@ app.get('/replies/:threadId/:replyId', async (req, res) => {
 });
 
 // Create a new reply
-app.post('/replies', async (req, res) => {
+app.post('/reply', async (req, res) => {
   const newReply = req.body;
   
   try {
@@ -515,7 +515,7 @@ app.post('/replies', async (req, res) => {
 });
 
 // Update a specific reply by thread_id and reply_id
-app.put('/replies/:threadId/:replyId', async (req, res) => {
+app.put('/reply/:threadId/:replyId', async (req, res) => {
   const { threadId, replyId } = req.params;
   const updatedReply = req.body;
   
@@ -532,7 +532,7 @@ app.put('/replies/:threadId/:replyId', async (req, res) => {
 });
 
 // Delete a specific reply by thread_id and reply_id
-app.delete('/replies/:threadId/:replyId', async (req, res) => {
+app.delete('/reply/:threadId/:replyId', async (req, res) => {
   const { threadId, replyId } = req.params;
   
   try {
