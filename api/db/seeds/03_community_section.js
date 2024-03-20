@@ -4,8 +4,9 @@ exports.seed = function (knex, Promise) {
         .then(function () {
             return knex("community_section").insert([
                 {
-                    "section_name": "engaging discussion",
-                    "description": "like most things on the internet, reading this is totally a great use of your time...",
+                    community_id: 1,
+                    section_name: "engaging discussion",
+                    description: "like most things on the internet, reading this is totally a great use of your time...",
                 },
             ]);
         });
