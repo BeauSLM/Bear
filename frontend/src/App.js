@@ -7,8 +7,30 @@ import ThreadCard from './ThreadCard';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import BackButton from './BackButton';
 import Thread from './Thread';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const App = () => {
+
+    const [communities, setCommunities] = useState([]);
+
+    useEffect(() => {
+        axios.get('http://localhost:3001/community')
+            .then(response => {
+                console.log(response.data);
+                setCommunities(response.data);
+            })
+            .catch(error => {
+                // Handle error
+                console.log('Error fetching communities data:', error);
+            });
+    }, []);
+
+    console.log(communities);
+
+    // const communities = [
+    //     {id: 0, name: "Test", description: "test"}
+    // ];
 
 
     const userActivity = [
@@ -26,6 +48,8 @@ const App = () => {
         { name: "Thread Name 2", userName: "3p1cUser140", threadDate: "Feb 15, 2024", lastPostDate: "5 days ago" },
     ];
 
+
+
     return (
         <Router>
             <div className="container">
@@ -40,8 +64,9 @@ const App = () => {
                                 <div className="card-body">
                                     <div className="row">
                                         <CommunityCard
-                                            name="Community Name"
-                                            description="Add a short description about your community here"
+                                            // id={communities[0].id}
+                                            name={communities[0].name}
+                                            description={communities[0].description}
                                             subscribed={4}
                                             threads={138}
                                             userActivity={userActivity}
@@ -98,7 +123,7 @@ const App = () => {
                     } />
 
                     {/* Corrected Route for the user profile page */}
-                    <Route path="/community" element={
+                    <Route path="/community/:id" element={
                         <>
                             <BackButton
                                 destination={""} />

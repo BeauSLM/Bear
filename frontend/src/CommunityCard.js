@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const CommunityCard = ({ name, description, subscribed, threads, userActivity }) => {
+const CommunityCard = ({ id, name, description, subscribed, threads, userActivity }) => {
 
     const navigate = useNavigate();
     const handleViewCommunityClick = () => {
