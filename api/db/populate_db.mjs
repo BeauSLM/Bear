@@ -11,11 +11,8 @@ const communities = (await ax.get('community')).data
 const hugh = users[0]
 const mike = users[1]
 
-console.log(hugh)
-console.log(mike)
-
-// for (let c of communities) {
-//     c.owner_id = hughjass.id
-//     const c_json = JSON.stringify(c)
-//     ax.put(`community/${c.id}`, c_json)
-// }
+for (let c of communities) {
+    c.owner_id = hugh.id
+    console.log(c)
+    ax.put(`community/${c.id}`, c)
+}
