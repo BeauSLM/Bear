@@ -89,6 +89,27 @@ app.get('/community_section', async (req, res) => {
   }
 });
 
+// read community_section (not just one result) from community id
+app.get('/community_section/:communityId', async (req, res) => {
+  const { communityId } = req.params;
+
+  try{
+    const communitySections = await db
+      .select()
+      .from('community_section')
+      .where({ community_id: communityId })
+
+    if (communitySections) {
+      res.json(communitySections);
+    } else {
+      res.status(404).send('Community Sections not found:105');
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error fetching Community Section');
+  }
+});
+
 // Read a specific community_section entry
 app.get('/community_section/:communityId/:sectionName', async (req, res) => {
   const { communityId, sectionName } = req.params;
