@@ -4,7 +4,7 @@
     "dev": "nodemon main.js",
     "migrate": "knex migrate:latest --knexfile db/knexfile.js",
     "seed": "knex seed:run --knexfile db/knexfile.js",
-    "populate_db": "npm run migrate && npm run seed && node db/populate_db.mjs"
+    "populate-db": "rm db/dev.sqlite3 && touch db/dev.sqlite3 && npm run migrate && npm run seed"
   },
   "dependencies": {
     "better-sqlite3": "^9.4.3",
