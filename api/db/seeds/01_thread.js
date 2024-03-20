@@ -1,6 +1,6 @@
 exports.seed = function (knex, Promise) {
     return knex("thread")
-        .del()
+        .truncate()
         .then(function () {
             // return knex("thread").insert([
             //     {

@@ -1,6 +1,6 @@
 exports.seed = function (knex, Promise) {
     return knex("community_section")
-        .del()
+        .truncate()
         .then(function () {
             return knex("community_section").insert([
                 {
