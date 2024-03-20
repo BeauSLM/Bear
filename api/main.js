@@ -111,14 +111,14 @@ app.get('/community_section/:communityId', async (req, res) => {
 });
 
 // Read a specific community_section entry
-app.get('/community_section/:communityId/:sectionName', async (req, res) => {
-  const { communityId, sectionName } = req.params;
+app.get('/community_section/:communityId/:sectionId', async (req, res) => {
+  const { communityId, sectionId } = req.params;
   
   try {
     const communitySection = await db
       .select()
       .from('community_section')
-      .where({ community_id: communityId, section_name: sectionName })
+      .where({ community_id: communityId, section_id: sectionId })
       .first(); // Assuming only one result is expected
     
     if (communitySection) {
@@ -146,13 +146,13 @@ app.post('/community_section', async (req, res) => {
 });
 
 // Update a specific community_section entry
-app.put('/community_section/:communityId/:sectionName', async (req, res) => {
-  const { communityId, sectionName } = req.params;
+app.put('/community_section/:communityId/:sectionId', async (req, res) => {
+  const { communityId, sectionId } = req.params;
   const updatedCommunitySection = req.body;
   
   try {
     await db('community_section')
-      .where({ community_id: communityId, section_name: sectionName })
+      .where({ community_id: communityId, section_id: sectionId })
       .update(updatedCommunitySection);
     
     res.send('Community Section updated successfully');
@@ -163,12 +163,12 @@ app.put('/community_section/:communityId/:sectionName', async (req, res) => {
 });
 
 // Delete a specific community_section entry
-app.delete('/community_section/:communityId/:sectionName', async (req, res) => {
-  const { communityId, sectionName } = req.params;
+app.delete('/community_section/:communityId/:sectionId', async (req, res) => {
+  const { communityId, sectionId } = req.params;
   
   try {
     await db('community_section')
-      .where({ community_id: communityId, section_name: sectionName })
+      .where({ community_id: communityId, section_id: sectionId })
       .del();
     
     res.send('Community Section deleted successfully');
