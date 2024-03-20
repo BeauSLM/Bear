@@ -11,8 +11,8 @@ const communities = (await ax.get('community')).data
 const hugh = users[0]
 const mike = users[1]
 
-for (let c of communities) {
-    c.owner_id = hugh.id
-    console.log(c)
-    ax.put(`community/${c.id}`, c)
+for (let comm of communities) {
+    comm.owner_id = hugh.id
+    console.log(comm)
+    await ax.put(`community/${comm.id}`, comm)
 }
