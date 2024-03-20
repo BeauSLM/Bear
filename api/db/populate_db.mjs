@@ -13,6 +13,7 @@ const mike = users[1]
 
 for (let comm of communities) {
     comm.owner_id = hugh.id
-    console.log(comm)
     await ax.put(`community/${comm.id}`, comm)
 }
+
+
