@@ -3,7 +3,7 @@ exports.up = function(knex, Promise) {
         table.integer('thread_id').primary().references('thread_id').inTable('thread'); // GUID
         table.integer('reply_id').primary().references('reply_id').inTable('reply');
         table.integer('user_id').primary().references('id').inTable('user'); // GUID
-        table.timestamp('time').nonNullable().defaultTo(knex.fn.now());
+        table.timestamp('time').notNullable().defaultTo(knex.fn.now());
     })
 };
 
