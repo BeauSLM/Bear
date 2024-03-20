@@ -1,7 +1,7 @@
 exports.up = function(knex, Promise) {
     return knex.schema.createTable('thread', function(table) {
         table.integer('community_id').primary().references('id').inTable('community');
-        table.string('section', 50).primary().references('section_name').inTable('community_section');
+        table.integer('section_id').primary().references('section_id').inTable('community_section');
         table.increments('thread_id').primary();
         table.string('title', 100).notNullable();
         table.string('content', 2000).notNullable();
