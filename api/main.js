@@ -191,14 +191,14 @@ app.get('/community_page', async (req, res) => {
 });
 
 // Read a specific community_page entry
-app.get('/community_page/:communityId/:pageName', async (req, res) => {
-  const { communityId, pageName } = req.params;
+app.get('/community_page/:communityId/:pageId', async (req, res) => {
+  const { communityId, pageId } = req.params;
   
   try {
     const communityPage = await db
       .select()
       .from('community_page')
-      .where({ community_id: communityId, page_name: pageName })
+      .where({ community_id: communityId, page_id: pageId })
       .first(); // Assuming only one result is expected
     
     if (communityPage) {
@@ -226,13 +226,13 @@ app.post('/community_page', async (req, res) => {
 });
 
 // Update a specific community_page entry
-app.put('/community_page/:communityId/:pageName', async (req, res) => {
-  const { communityId, pageName } = req.params;
+app.put('/community_page/:communityId/:pageId', async (req, res) => {
+  const { communityId, pageId } = req.params;
   const updatedCommunityPage = req.body;
   
   try {
     await db('community_page')
-      .where({ community_id: communityId, page_name: pageName })
+      .where({ community_id: communityId, page_id: pageId })
       .update(updatedCommunityPage);
     
     res.send('Community Page updated successfully');
@@ -243,12 +243,12 @@ app.put('/community_page/:communityId/:pageName', async (req, res) => {
 });
 
 // Delete a specific community_page entry
-app.delete('/community_page/:communityId/:pageName', async (req, res) => {
-  const { communityId, pageName } = req.params;
+app.delete('/community_page/:communityId/:pageId', async (req, res) => {
+  const { communityId, pageId } = req.params;
   
   try {
     await db('community_page')
-      .where({ community_id: communityId, page_name: pageName })
+      .where({ community_id: communityId, page_id: pageId })
       .del();
     
     res.send('Community Page deleted successfully');
