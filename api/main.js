@@ -530,22 +530,6 @@ app.put('/reply/:threadId/:replyId', async (req, res) => {
   }
 });
 
-// Delete a specific reply by thread_id and reply_id
-app.delete('/reply/:threadId/:replyId', async (req, res) => {
-  const { threadId, replyId } = req.params;
-  
-  try {
-    await db('reply')
-      .where({ thread_id: threadId, reply_id: replyId })
-      .del();
-    
-    res.send('Reply deleted successfully');
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Error deleting reply');
-  }
-});
-
 // thread_like 
 
 // Read all thread_like entries
@@ -669,23 +653,6 @@ app.put('/thread/:threadId', async (req, res) => {
     res.status(500).send('Error updating thread');
   }
 });
-
-// Delete a specific thread by thread_id
-app.delete('/thread/:threadId', async (req, res) => {
-  const { threadId } = req.params;
-  
-  try {
-    await db('thread')
-      .where({ thread_id: threadId })
-      .del();
-    
-    res.send('Thread deleted successfully');
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Error deleting thread');
-  }
-});
-
 
 // user_subscription
 // Read all user_subscription entries
