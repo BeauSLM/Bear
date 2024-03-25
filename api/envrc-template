@@ -1,0 +1,3 @@
+# copy this file to .envrc and put your postman api key in
+
+export POSTMAN_API=<your postman api key here>
