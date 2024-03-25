@@ -730,12 +730,12 @@ app.post('/user_subscription', async (req, res) => {
 });
 
 // Delete user_subscription entries for a specific user_id, community_id, and section
-app.delete('/user_subscription/:userId/:communityId/:section', async (req, res) => {
-  const { userId, communityId, section } = req.params;
+app.delete('/user_subscription/:userId/:communityId/:section_id', async (req, res) => {
+  const { userId, communityId, section_id } = req.params;
   
   try {
     await db('user_subscription')
-      .where({ user_id: userId, community_id: communityId, section: section })
+      .where({ user_id: userId, community_id: communityId, section_id: section_id })
       .del();
     
     res.send('User Subscription entries deleted successfully');
