@@ -162,22 +162,6 @@ app.put('/community_section/:communityId/:sectionId', async (req, res) => {
   }
 });
 
-// Delete a specific community_section entry
-app.delete('/community_section/:communityId/:sectionId', async (req, res) => {
-  const { communityId, sectionId } = req.params;
-  
-  try {
-    await db('community_section')
-      .where({ community_id: communityId, section_id: sectionId })
-      .del();
-    
-    res.send('Community Section deleted successfully');
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Error deleting Community Section');
-  }
-});
-
 // community_page
 // Read all community_page entries
 app.get('/community_page', async (req, res) => {
