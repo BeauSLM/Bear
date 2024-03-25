@@ -465,23 +465,6 @@ app.post('/reply_like', async (req, res) => {
   }
 });
 
-// Update a specific reply_like entry by thread_id, reply_id, and user_id
-app.put('/reply_like/:threadId/:replyId/:userId', async (req, res) => {
-  const { threadId, replyId, userId } = req.params;
-  const updatedReplyLike = req.body;
-  
-  try {
-    await db('reply_like')
-      .where({ thread_id: threadId, reply_id: replyId, user_id: userId })
-      .update(updatedReplyLike);
-    
-    res.send('Reply Like entry updated successfully');
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Error updating reply_like entry');
-  }
-});
-
 // Delete a specific reply_like entry by thread_id, reply_id, and user_id
 app.delete('/reply_like/:threadId/:replyId/:userId', async (req, res) => {
   const { threadId, replyId, userId } = req.params;
