@@ -10,17 +10,6 @@ const cors = require('cors');
 app.use(cors());
 app.use(express.json());
 
-app.get('/', (req, res) => {
-  res.send('Hello from api!');
-});
-
-/*
-app.get('/users', async (req, res) => {
-  const users = await db.select().from('users');
-  res.json(users);
-});
-*/
-
 // community_mod stuff
 app.get('/community_mod', async (req, res) => {
   try{
@@ -796,8 +785,3 @@ const PORT = 3001;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
-
-// app.get('/test', (req, res) => {
-
-//   res.send('Hello, World!');
-// });
