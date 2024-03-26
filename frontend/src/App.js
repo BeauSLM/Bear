@@ -26,12 +26,6 @@ const App = () => {
             });
     }, []);
 
-    console.log(communities);
-
-    // const communities = [
-    //     {id: 0, name: "Test", description: "test"}
-    // ];
-
 
     const userActivity = [
         { forum: "Forum One", time: "2 hours ago" },
@@ -63,28 +57,16 @@ const App = () => {
                                 </div>
                                 <div className="card-body">
                                     <div className="row">
-                                        <CommunityCard
-                                            // id={communities[0].id}
-                                            name={communities[0].name}
-                                            description={communities[0].description}
-                                            subscribed={4}
-                                            threads={138}
-                                            userActivity={userActivity}
-                                        />
-                                        <CommunityCard
-                                            name="Community Name"
-                                            description="Add a short description about your community here"
-                                            subscribed={4}
-                                            threads={138}
-                                            userActivity={userActivity}
-                                        />
-                                        <CommunityCard
-                                            name="Community Name"
-                                            description="Add a short description about your community here"
-                                            subscribed={4}
-                                            threads={138}
-                                            userActivity={userActivity}
-                                        />
+                                        {communities.map((community, index) => (
+                                            <CommunityCard
+                                                id={community.id}
+                                                name={community.name}
+                                                description={community.description}
+                                                subscribed={4} // Assuming a static value for subscribed and threads for now
+                                                threads={138} // You might want to make these dynamic as well
+                                                userActivity={userActivity}
+                                            />
+                                        ))}
                                     </div>
                                 </div>
                             </div>
@@ -122,7 +104,6 @@ const App = () => {
                         </>
                     } />
 
-                    {/* Corrected Route for the user profile page */}
                     <Route path="/community/:id" element={
                         <>
                             <BackButton

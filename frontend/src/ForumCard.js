@@ -1,5 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+
+
 
 const ForumCard = ({ name, description, subscribed, threads, userActivity }) => {
 
@@ -8,14 +13,34 @@ const ForumCard = ({ name, description, subscribed, threads, userActivity }) => 
         navigate('/threads');
     };
 
+    const { id } = useParams();
+
+    const [communitySection, setCommunitySection] = useState([]);
+
+    useEffect(() => {
+        axios.get(`http://localhost:3001/community_section/${id}`)
+            .then(response => {
+                console.log(response.data);
+                setCommunitySection(response.data);
+            })
+            .catch(error => {
+                // Handle error
+                console.log('Error fetching communities data:', error);
+            });
+    }, []);
+
+    console.log(communitySection)
+
+
 
     return (
         <div className="card mb-2 shadow-sm">
             <div className="card-body p-2">
-                <div className="row align-items-center">
-                    <div className="col-md-4">
-                        <h5 className="card-title" style={{ fontSize: '1rem', marginBottom: '0.25rem' }}>{name}</h5>
-                        <p className="card-text" style={{ fontSize: '0.875rem', marginBottom: '0.25rem' }}>{description}</p>
+                {communitySection.map((communitySection, index) => (<div className="col-md-4">
+                    <div className="row align-items-center">
+                        {/* <h5 className="card-title" style={{ fontSize: '1rem', marginBottom: '0.25rem' }}>{id}</h5> */}
+                        <h5 className="card-title" style={{ fontSize: '1rem', marginBottom: '0.25rem' }}>{communitySection.section_name}</h5>
+                        <p className="card-text" style={{ fontSize: '0.875rem', marginBottom: '0.25rem' }}>{communitySection.description}</p>
                     </div>
 
                     <div className="col-md-4 d-flex justify-content-center">
@@ -35,7 +60,9 @@ const ForumCard = ({ name, description, subscribed, threads, userActivity }) => 
                         </div>
                     </div>
                 </div>
+                ))}
             </div>
+
 
             <div className="card-footer text-muted p-2">
                 <div className="d-flex justify-content-between align-items-center">
