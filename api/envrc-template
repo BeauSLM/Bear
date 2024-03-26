@@ -1,3 +1,4 @@
-# copy this file to .envrc and put your postman api key in
+# copy this file to .envrc and put the api collection id in the POSTMAN_COLLECTION_ID variable
+# note that we can NOT check the collection id into the repo under ANY circumstances
 
-export POSTMAN_API=<your postman api key here>
+export POSTMAN_COLLECTION_ID=<bear's postman collection id>

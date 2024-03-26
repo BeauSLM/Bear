@@ -8,7 +8,7 @@ npm start &
 
 sleep 1
 
-postman collection run $POSTMAN_API
+postman collection run "$POSTMAN_COLLECTION_ID"
 
 # XXX(beau): hehe
 killall node
