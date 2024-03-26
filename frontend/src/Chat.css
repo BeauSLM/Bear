@@ -1,0 +1,7 @@
+.chat_container {
+    height: 95%;
+    width: 95%;
+    background-color: #f5f5f5;
+    display: grid;
+    grid-template-columns: 25% 75%;
+}
