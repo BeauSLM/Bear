@@ -346,17 +346,19 @@ app.get("/login", async (req, res) => {
     const loginInfo = req.body;
 
     try {
+        console.log(loginInfo.username);
+        const userID = (await db("user").select('id').where( 'name', loginInfo.username ).first());
 
-        const loginEntry = await db.select().from("user").where({ name: loginInfo.username }).first();
-
-        if (!loginEntry) {
+        if (!userID) {
             return res.status(400).json({
                 status: 'error',
                 message: 'User not found'
             });
         }
 
-        const passwordMatch = await bcrypt.compare(loginInfo.password, loginEntry.passwordHash);
+        const loginHash = (await db('login').select('passwordHash').where('user_id', userID.id).first()).passwordHash;
+        console.log(loginHash);
+        const passwordMatch = await bcrypt.compare(loginInfo.password, loginHash);
 
         if (!passwordMatch) {
             return res.status(400).json({
@@ -366,7 +368,7 @@ app.get("/login", async (req, res) => {
         }
 
         // If password matches, return the user_id
-        res.json({ user_id: loginEntry.user_id });
+        res.json({ user_id: userID.id });
     } catch (error) {
         console.error(error);
         res.status(500).send("Error validating login");
