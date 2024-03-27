@@ -19,7 +19,7 @@ for call in api_calls:
 
     url = re.split(pattern, call)[1]
 
-    endpoints.setdefault(req, set()).add(url)
+    endpoints.setdefault(req, []).append(url)
 
 
 for req, urls in endpoints.items():
