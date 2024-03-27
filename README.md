@@ -13,7 +13,8 @@ Get API dependencies and initialize database:
 ```bash
 cd api/
 
-npm install && npm run populate-db
+npm install
+npm run populate-db
 ```
 
 Get frontend dependencies:
