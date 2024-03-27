@@ -19,7 +19,7 @@ const ThreadCard = () => {
     useEffect(() => {
         axios.get(`http://localhost:3001/thread`)
             .then(response => {
-                const filteredThreads = response.data.filter(thread => thread.community_id.toString() === id);
+                const filteredThreads = response.data.filter(thread => thread.section_id.toString() === id);
                 setThreads(filteredThreads);
                 return filteredThreads;
             })
@@ -72,7 +72,6 @@ const ThreadCard = () => {
         const postDate = new Date(dateString);
         const today = new Date();
         const timeDiff = today - postDate + (6 * 60 * 60 * 1000);
-        console.log(timeDiff);
 
         if (timeDiff < 60000) {
             return "just now";
@@ -87,12 +86,16 @@ const ThreadCard = () => {
         }
     };
 
+    console.log(threads);
+
 
     return (
         <div>
             <div className="card-header">
                 <BackButton
-                    destination={`community/${id}`} />
+                    destination={threads.length > 0 ? `community/${threads[0].community_id}` : ''}
+                />
+
                 <h4>All Threads</h4>
             </div>
             {isLoading ? (
