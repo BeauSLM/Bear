@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-
+import { useNavigate } from 'react-router-dom';
 
 const CommunityForm = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     tagline: '',
@@ -27,6 +28,7 @@ const CommunityForm = () => {
       console.error('Error creating community:', error);
       alert('Failed to create community. Check console for details.');
     }
+    navigate('/');
   };
 
   return (

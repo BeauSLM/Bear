@@ -8,13 +8,13 @@ import { useNavigate } from 'react-router-dom';
 import { Dropdown } from 'react-bootstrap';
 
 const Header = () => {
-    const { username, setUsername } = useAuth(); // Assume setUsername is provided by your AuthContext for updating the username
+    const { user, setUser } = useAuth(); // Assume setUsername is provided by your AuthContext for updating the username
     const navigate = useNavigate();
 
     const handleLogout = () => {
         localStorage.removeItem('userToken');
         localStorage.removeItem('username');
-        setUsername('');
+        setUser(null);
         navigate('/login');
     };
 
@@ -30,8 +30,8 @@ const Header = () => {
                 <div className="d-flex align-items-center">
                     <div className="dropdown">
                         <Dropdown>
-                            <Dropdown.Toggle variant="secondary" id="dropdown-basic">
-                                {username}
+                        <Dropdown.Toggle variant="secondary" id="dropdown-basic">
+                                {user ? user.username : 'Guest'}
                             </Dropdown.Toggle>
 
                             <Dropdown.Menu>

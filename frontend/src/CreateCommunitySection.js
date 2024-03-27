@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const CreateCommunitySection = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     community_id: '',
     section_name: '',
@@ -41,6 +44,7 @@ const CreateCommunitySection = () => {
       console.error('Error creating community section:', error);
       alert('Failed to create community section. Check console for details.');
     }
+    navigate('/');
   };
 
   return (
