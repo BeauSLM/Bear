@@ -487,7 +487,16 @@ app.post("/reply", async (req, res) => {
     const newReply = req.body;
 
     try {
-        await db("reply").insert(newReply);
+        await db.transaction(async (trx) => {
+            await trx("reply").insert(newReply);
+            const threadId = newReply.thread_id;
+            const thread = await trx("thread").where({ thread_id: threadId }).first();
+            const sectionId = thread.section_id;
+            await trx("community_section")
+                .where({ section_id: sectionId })
+                .update({ last_active: db.raw('CURRENT_TIMESTAMP') });
+        });
+
         res.send("Reply created successfully");
     } catch (error) {
         console.error(error);
@@ -611,7 +620,12 @@ app.post("/thread", async (req, res) => {
     const newThread = req.body;
 
     try {
-        await db("thread").insert(newThread);
+        await db.transaction(async (trx) => {
+            await trx("thread").insert(newThread);
+            await trx("community_section")
+                .where({ section_id: newThread.section_id })
+                .update({ last_active: db.raw('CURRENT_TIMESTAMP') });
+        });
         res.send("Thread created successfully");
     } catch (error) {
         console.error(error);
@@ -619,13 +633,21 @@ app.post("/thread", async (req, res) => {
     }
 });
 
+// 
 // Update a specific thread by thread_id
 app.put("/thread/:threadId", async (req, res) => {
     const { threadId } = req.params;
     const updatedThread = req.body;
 
     try {
-        await db("thread").where({ thread_id: threadId }).update(updatedThread);
+        await db.transaction(async (trx) => {
+            await trx("thread").where({ thread_id: threadId }).update(updatedThread);
+            const thread = await trx("thread").where({ thread_id: threadId }).first();
+            const sectionId = thread.section_id;
+            await trx("community_section")
+                .where({ section_id: sectionId })
+                .update({ last_active: db.raw('CURRENT_TIMESTAMP') });
+        });
 
         res.send("Thread updated successfully");
     } catch (error) {
