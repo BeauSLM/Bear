@@ -345,7 +345,6 @@ app.get("/login", async (req, res) => {
     const loginInfo = req.body;
 
     try {
-        console.log(loginInfo.username);
         const userID = (await db("user").select('id').where( 'name', loginInfo.username ).first());
 
         if (!userID) {
@@ -356,7 +355,6 @@ app.get("/login", async (req, res) => {
         }
 
         const loginHash = (await db('login').select('passwordHash').where('user_id', userID.id).first()).passwordHash;
-        console.log(loginHash);
         const passwordMatch = await bcrypt.compare(loginInfo.password, loginHash);
 
         if (!passwordMatch) {
