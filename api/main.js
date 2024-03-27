@@ -1,5 +1,6 @@
 const express = require("express");
 const knexConfig = require("./db/knexfile");
+const bcrypt = require('bcrypt');
 
 // Initializes knex based of the current environment variable
 const db = require("knex")(knexConfig);
@@ -9,6 +10,7 @@ const app = express();
 const cors = require("cors");
 app.use(cors());
 app.use(express.json());
+
 
 // community_mod stuff
 app.get("/community_mod", async (req, res) => {
@@ -308,40 +310,6 @@ app.delete("/community/:id", async (req, res) => {
     }
 });
 
-// login (Not sure if we actually need these)
-// Read all login entries
-app.get("/login", async (req, res) => {
-    try {
-        const logins = await db.select().from("login");
-        res.json(logins);
-    } catch (error) {
-        console.error(error);
-        res.status(500).send("Error fetching login entries");
-    }
-});
-
-// Read a specific login entry by user_id
-app.get("/login/:userId", async (req, res) => {
-    const { userId } = req.params;
-
-    try {
-        const login = await db
-            .select()
-            .from("login")
-            .where({ user_id: userId })
-            .first(); // Assuming only one result is expected
-
-        if (login) {
-            res.json(login);
-        } else {
-            res.status(404).send("Login entry not found");
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).send("Error fetching login entry");
-    }
-});
-
 // Create a new login entry
 app.post("/login", async (req, res) => {
     const newLogin = req.body;
@@ -355,32 +323,35 @@ app.post("/login", async (req, res) => {
     }
 });
 
-// Update a specific login entry by user_id
-app.put("/login/:userId", async (req, res) => {
-    const { userId } = req.params;
-    const updatedLogin = req.body;
+// validate login, take in username & password. 
+app.get("/login", async (req, res) => {
+    const loginInfo = req.body;
 
     try {
-        await db("login").where({ user_id: userId }).update(updatedLogin);
 
-        res.send("Login entry updated successfully");
+        const loginEntry = await db.select().from("login").where({ username: loginInfo.username }).first();
+
+        if (!loginEntry) {
+            return res.status(400).json({
+                status: 'error',
+                message: 'User not found'
+            });
+        }
+
+        const passwordMatch = await bcrypt.compare(loginInfo.password, loginEntry.passwordHash);
+
+        if (!passwordMatch) {
+            return res.status(400).json({
+                status: 'error',
+                message: 'Incorrect password'
+            });
+        }
+
+        // If password matches, return the user_id
+        res.json({ user_id: loginEntry.user_id });
     } catch (error) {
         console.error(error);
-        res.status(500).send("Error updating login entry");
-    }
-});
-
-// Delete a specific login entry by user_id
-app.delete("/login/:userId", async (req, res) => {
-    const { userId } = req.params;
-
-    try {
-        await db("login").where({ user_id: userId }).del();
-
-        res.send("Login entry deleted successfully");
-    } catch (error) {
-        console.error(error);
-        res.status(500).send("Error deleting login entry");
+        res.status(500).send("Error validating login");
     }
 });
 
