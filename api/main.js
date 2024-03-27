@@ -343,8 +343,6 @@ app.post("/login", async (req, res) => {
 // validate login, take in username & password. 
 app.post("/validateLogin", async (req, res) => {
     const loginInfo = req.body;
-    // XXX: DELETE ME
-    console.log(loginInfo);
 
     try {
         const userID = (await db("user").select('id').where( 'name', loginInfo.username ).first());
