@@ -17,7 +17,6 @@ const App = () => {
     useEffect(() => {
         axios.get('http://localhost:3001/community')
             .then(response => {
-                console.log(response.data);
                 setCommunities(response.data);
             })
             .catch(error => {
@@ -25,12 +24,6 @@ const App = () => {
                 console.log('Error fetching communities data:', error);
             });
     }, []);
-
-    console.log(communities);
-
-    // const communities = [
-    //     {id: 0, name: "Test", description: "test"}
-    // ];
 
 
     const userActivity = [
@@ -63,28 +56,16 @@ const App = () => {
                                 </div>
                                 <div className="card-body">
                                     <div className="row">
-                                        <CommunityCard
-                                            // id={communities[0].id}
-                                            name={communities[0].name}
-                                            description={communities[0].description}
-                                            subscribed={4}
-                                            threads={138}
-                                            userActivity={userActivity}
-                                        />
-                                        <CommunityCard
-                                            name="Community Name"
-                                            description="Add a short description about your community here"
-                                            subscribed={4}
-                                            threads={138}
-                                            userActivity={userActivity}
-                                        />
-                                        <CommunityCard
-                                            name="Community Name"
-                                            description="Add a short description about your community here"
-                                            subscribed={4}
-                                            threads={138}
-                                            userActivity={userActivity}
-                                        />
+                                        {communities.map((community, index) => (
+                                            <CommunityCard
+                                                id={community.id}
+                                                name={community.name}
+                                                description={community.description}
+                                                subscribed={4}
+                                                threads={138}
+                                                userActivity={userActivity}
+                                            />
+                                        ))}
                                     </div>
                                 </div>
                             </div>
@@ -122,20 +103,17 @@ const App = () => {
                         </>
                     } />
 
-                    {/* Corrected Route for the user profile page */}
                     <Route path="/community/:id" element={
                         <>
                             <BackButton
                                 destination={""} />
                             <div className="card mb-4 shadow-sm">
                                 <div className="card-header">
-                                    <h4>Category 1</h4>
+                                    <h4>All Categories</h4>
                                 </div>
                                 <div className="card-body">
                                     <div className="row">
                                         <ForumCard
-                                            name="Forum Name"
-                                            description="Add a short description about your Forum here"
                                             subscribed={4}
                                             threads={138}
                                             userActivity={ForumActivity}
@@ -143,76 +121,22 @@ const App = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="card mb-4 shadow-sm">
-                                <div className="card-header">
-                                    <h4>Category 2</h4>
-                                </div>
-                                <div className="card-body">
-                                    <div className="row">
-                                        <ForumCard
-                                            name="Forum Name"
-                                            description="Add a short description about your community here"
-                                            subscribed={2}
-                                            threads={9730}
-                                            userActivity={ForumActivity}
-                                        />
-                                        <ForumCard
-                                            name="Forum Name"
-                                            description="Add a short description about your community here"
-                                            subscribed={2}
-                                            threads={9730}
-                                            userActivity={ForumActivity}
-                                        />
-                                        <ForumCard
-                                            name="Forum Name"
-                                            description="Add a short description about your forum here"
-                                            subscribed={2}
-                                            threads={9730}
-                                            userActivity={ForumActivity}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
                         </>
 
-                    } />  <Route path="/threads" element={
+                    } />  <Route path="/threads/:id" element={
                         <>
                             <div className="card mb-4 shadow-sm">
-                                <div className="card-header">
-                                    <BackButton
-                                        destination={"community"} />
-                                    <h4>Thread List</h4>
-                                </div>
                                 <div className="card-body">
-                                    {threads.map((thread, index) => (
-                                        <ThreadCard
-                                            key={index}
-                                            threadName={thread.name}
-                                            userName={thread.userName}
-                                            threadDate={thread.threadDate}
-                                            lastPostDate={thread.lastPostDate}
-                                        />
-                                    ))}
+                                    <ThreadCard />
                                 </div>
                             </div>
                         </>
                     } />
-                    <Route path="/thread" element={
+                    <Route path="/thread/:id" element={
                         <>
                             <div className="card mb-4 shadow-sm">
-                                <div className="card-header">
-                                    <BackButton
-                                        destination={"threads"} />
-                                    <h4>Thread</h4>
-                                </div>
                                 <div className="card-body">
-                                    {threads.map((thread, index) => (
-                                        <Thread
-                                            key={index}
-                                            userName={thread.userName}
-                                            lastPostDate={thread.lastPostDate}
-                                        />
-                                    ))}
+                                    <Thread />
                                 </div>
                             </div>
                         </>

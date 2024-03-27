@@ -5,7 +5,7 @@ const CommunityCard = ({ id, name, description, subscribed, threads, userActivit
 
     const navigate = useNavigate();
     const handleViewCommunityClick = () => {
-        navigate('/community');
+        navigate(`/community/${id}`);
     };
 
     return (
@@ -15,6 +15,7 @@ const CommunityCard = ({ id, name, description, subscribed, threads, userActivit
                     {/* Community Name and Description */}
                     <div className="col-md-4">
                         <h5 className="card-title" style={{ fontSize: '1rem', marginBottom: '0.25rem' }}>{name}</h5>
+                        <h5 className="card-title" style={{ fontSize: '1rem', marginBottom: '0.25rem' }}>{id}</h5>
                         <p className="card-text" style={{ fontSize: '0.875rem', marginBottom: '0.25rem' }}>{description}</p>
                     </div>
 
