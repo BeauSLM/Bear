@@ -347,7 +347,7 @@ app.get("/login", async (req, res) => {
 
     try {
 
-        const loginEntry = await db.select().from("login").where({ username: loginInfo.username }).first();
+        const loginEntry = await db.select().from("user").where({ name: loginInfo.username }).first();
 
         if (!loginEntry) {
             return res.status(400).json({
