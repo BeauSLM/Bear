@@ -20,7 +20,6 @@ const ForumCard = () => {
                 console.log('Error fetching communities data:', error);
             });
 
-        // Fetch all threads and filter by community_id
         axios.get('http://localhost:3001/thread')
             .then(response => {
                 const filteredThreads = response.data.filter(thread => thread.community_id.toString() === id);
@@ -29,7 +28,7 @@ const ForumCard = () => {
             .catch(error => {
                 console.log('Error fetching threads:', error);
             });
-    }, [id]); // Depend on id to refetch if it changes
+    }, [id]);
 
 
     const handleViewThreadsClick = () => {

@@ -13,7 +13,6 @@ const Thread = () => {
     const [thread, setThread] = useState([]);
     const [threadUsersData, setThreadUsersData] = useState([]);
     const [threadLikeCount, setThreadLikeCount] = useState(0);
-    const [replyLikeCount, setReplyLikeCount] = useState(0);
 
 
     useEffect(() => {
