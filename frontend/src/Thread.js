@@ -108,7 +108,6 @@ const Thread = () => {
             content: newReplyContent,
         })
             .then(response => {
-                // Handle success. For example, refresh the replies or add the new reply to the local state
                 console.log('Reply posted successfully');
                 setNewReplyContent('');
                 fetchReplies();

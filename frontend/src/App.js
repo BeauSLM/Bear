@@ -7,9 +7,10 @@ import ThreadCard from './ThreadCard';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import BackButton from './BackButton';
 import Thread from './Thread';
+import LoginPage from './Login';
+
 
 const App = () => {
-
 
     const ForumActivity = [
         { forum: "Thread One", time: "2 hours ago" },
@@ -21,6 +22,7 @@ const App = () => {
             <div className="container">
                 <Header />
                 <Routes>
+                    <Route path="/login" element={<LoginPage />} /> {/* Add the login route */}
                     <Route path="/" element={
                         <>
                             <div className="card mb-4 shadow-sm">
@@ -35,43 +37,31 @@ const App = () => {
                             </div>
                         </>
                     } />
-
                     <Route path="/community/:id" element={
                         <>
-                            <BackButton
-                                destination={""} />
+                            <BackButton destination={""} />
                             <div className="card mb-4 shadow-sm">
                                 <div className="card-header">
                                     <h4>All Categories</h4>
                                 </div>
                                 <div className="card-body">
-                                    <div className="row">
-                                        <ForumCard
-                                            subscribed={4}
-                                            threads={138}
-                                            userActivity={ForumActivity}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </>
-
-                    } />  <Route path="/threads/:id" element={
-                        <>
-                            <div className="card mb-4 shadow-sm">
-                                <div className="card-body">
-                                    <ThreadCard />
+                                    <ForumCard
+                                        subscribed={4}
+                                        threads={138}
+                                        userActivity={ForumActivity}
+                                    />
                                 </div>
                             </div>
                         </>
                     } />
+                    <Route path="/threads/:id" element={
+                        <>
+                            <ThreadCard />
+                        </>
+                    } />
                     <Route path="/thread/:id" element={
                         <>
-                            <div className="card mb-4 shadow-sm">
-                                <div className="card-body">
-                                    <Thread />
-                                </div>
-                            </div>
+                            <Thread />
                         </>
                     } />
                 </Routes>
@@ -81,4 +71,3 @@ const App = () => {
 };
 
 export default App;
-
