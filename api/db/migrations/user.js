@@ -2,7 +2,6 @@ exports.up = function(knex, Promise) {
     return knex.schema.createTable('user', function(table) {
         table.increments('id').primary(); // GUID
         table.string('name', 32).notNullable().unique();
-        table.string('email', 200).notNullable();
         table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
         table.timestamp('last_online');
         table.timestamp('birthday');
