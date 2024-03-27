@@ -5,7 +5,7 @@ import { useAuth } from './AuthContext';
 
 const LoginPage = () => {
     const navigate = useNavigate();
-    const { setUsername: setGlobalUsername } = useAuth();
+    const { setUsername } = useAuth();
     const [username, setUsernameLocal] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -20,7 +20,7 @@ const LoginPage = () => {
             .then(response => {
                 localStorage.setItem('userToken', response.data.user_id);
                 localStorage.setItem('username', username); 
-                setGlobalUsername(username);
+                setUsername(username);
                 navigate('/');
             })
             .catch(err => {

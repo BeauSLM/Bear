@@ -1,17 +1,14 @@
-import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 
 const RequireAuth = ({ children }) => {
-    const auth = useAuth();
+    const { username } = useAuth();
 
-    if (!auth.user) {
-        // Redirect to the login page if not logged in
+    if (!username) {
+        // User is not logged in, redirect to login page
         return <Navigate to="/login" replace />;
     }
 
+    // User is logged in, allow access to the route
     return children;
 };
-
-
-export default RequireAuth;
