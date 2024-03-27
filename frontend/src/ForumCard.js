@@ -20,7 +20,6 @@ const ForumCard = () => {
                 console.log('Error fetching communities data:', error);
             });
 
-        // Fetch all threads and filter by community_id
         axios.get('http://localhost:3001/thread')
             .then(response => {
                 const filteredThreads = response.data.filter(thread => thread.community_id.toString() === id);
@@ -29,7 +28,7 @@ const ForumCard = () => {
             .catch(error => {
                 console.log('Error fetching threads:', error);
             });
-    }, [id]); // Depend on id to refetch if it changes
+    }, [id]);
 
 
     const handleViewThreadsClick = () => {
@@ -39,9 +38,14 @@ const ForumCard = () => {
     const getDaysAgo = (dateString) => {
         const postDate = new Date(dateString);
         const today = new Date();
-        const timeDiff = today - postDate;
+        const timeDiff = today - postDate + (6 * 60 * 60 * 1000);
+        console.log(timeDiff);
 
-        if (timeDiff <= 86400000) {
+        if (timeDiff < 60000) {
+            return "just now";
+        } else if (timeDiff >= 6000 && timeDiff <= 3600000) {
+            return "< 1 hour ago"
+        } else if (timeDiff <= 86400000) { // 24 hours in milliseconds
             const hours = Math.floor(timeDiff / (1000 * 60 * 60));
             return hours + (hours === 1 ? " hour ago" : " hours ago");
         } else {
@@ -49,6 +53,7 @@ const ForumCard = () => {
             return days + (days === 1 ? " day ago" : " days ago");
         }
     };
+
 
     const getLastActive = () => {
         if (relatedThreads.length > 0) {

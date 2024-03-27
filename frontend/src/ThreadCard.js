@@ -19,10 +19,9 @@ const ThreadCard = () => {
     useEffect(() => {
         axios.get(`http://localhost:3001/thread`)
             .then(response => {
-                // Filter threads by community_id
                 const filteredThreads = response.data.filter(thread => thread.community_id.toString() === id);
                 setThreads(filteredThreads);
-                return filteredThreads; // Return here for chaining
+                return filteredThreads;
             })
             .then(filteredThreads => {
                 // Fetch user data for each thread
@@ -33,17 +32,16 @@ const ThreadCard = () => {
                     const usersData = userResponses.map(response => response.data);
                     const newThreadsUsersData = new Map();
                     usersData.forEach((userData, index) => {
-                        // Use filteredThreads for indexing to avoid the timing issue
                         newThreadsUsersData.set(filteredThreads[index].id, userData);
                     });
                     setThreadsUsersData(newThreadsUsersData);
-                    return filteredThreads; // Return for further chaining
+                    return filteredThreads;
                 });
             })
             .then(filteredThreads => {
                 console.log(filteredThreads)
                 const likePromises = filteredThreads.map(thread =>
-                    axios.get(`http://localhost:3001/thread_like/${thread.thread_id}`) // Make sure you're using thread.id, not thread.thread_id for consistency
+                    axios.get(`http://localhost:3001/thread_like/${thread.thread_id}`)
                 );
                 return Promise.all(likePromises).then(likeResponses => {
                     const newThreadLikeCounts = new Map();
@@ -56,7 +54,6 @@ const ThreadCard = () => {
                 });
 
             })
-            // Inside your useEffect, after the last Promise.all call completes:
             .then(() => {
                 setIsLoading(false);
             })
@@ -74,9 +71,14 @@ const ThreadCard = () => {
     const getDaysAgo = (dateString) => {
         const postDate = new Date(dateString);
         const today = new Date();
-        const timeDiff = today - postDate;
+        const timeDiff = today - postDate + (6 * 60 * 60 * 1000);
+        console.log(timeDiff);
 
-        if (timeDiff <= 86400000) {
+        if (timeDiff < 60000) {
+            return "just now";
+        } else if (timeDiff >= 6000 && timeDiff <= 3600000) {
+            return "< 1 hour ago"
+        } else if (timeDiff <= 86400000) {
             const hours = Math.floor(timeDiff / (1000 * 60 * 60));
             return hours + (hours === 1 ? " hour ago" : " hours ago");
         } else {
@@ -84,6 +86,7 @@ const ThreadCard = () => {
             return days + (days === 1 ? " day ago" : " days ago");
         }
     };
+
 
     return (
         <div>
@@ -114,7 +117,7 @@ const ThreadCard = () => {
                                     </div>
                                 </div>
 
-                                <div className="col-3 col-md-3 text-end">
+                                <div className="col-3 col-md-3 d-flex flex-column align-items-end">
                                     <strong>
                                         {thread.created_at ? getDaysAgo(thread.created_at) : 'Loading...'}
                                     </strong>
