@@ -161,18 +161,10 @@ const App = () => {
                                 <div className="card-header">
                                     <BackButton
                                         destination={"community"} />
-                                    <h4>Thread List</h4>
+                                    <h4>All Threads</h4>
                                 </div>
                                 <div className="card-body">
-                                    {threads.map((thread, index) => (
-                                        <ThreadCard
-                                            key={index}
-                                            threadName={thread.name}
-                                            userName={thread.userName}
-                                            threadDate={thread.threadDate}
-                                            lastPostDate={thread.lastPostDate}
-                                        />
-                                    ))}
+                                    <ThreadCard/>
                                 </div>
                             </div>
                         </>
@@ -181,7 +173,7 @@ const App = () => {
                         <>
                             <div className="card mb-4 shadow-sm">
                                 <div className="card-body">
-                                    <Thread/>
+                                    <Thread />
                                 </div>
                             </div>
                         </>
