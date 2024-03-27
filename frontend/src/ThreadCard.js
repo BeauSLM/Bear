@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import threadPicture from './images/threadPic.png';
 import person from './images/person.jpg';
+import BackButton from './BackButton';
 
 const ThreadCard = () => {
     const navigate = useNavigate();
@@ -86,6 +87,11 @@ const ThreadCard = () => {
 
     return (
         <div>
+            <div className="card-header">
+                <BackButton
+                    destination={`community/${id}`} />
+                <h4>All Threads</h4>
+            </div>
             {isLoading ? (
                 <div>Loading...</div>
             ) : (

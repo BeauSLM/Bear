@@ -109,45 +109,13 @@ const App = () => {
                                 destination={""} />
                             <div className="card mb-4 shadow-sm">
                                 <div className="card-header">
-                                    <h4>Category 1</h4>
+                                    <h4>All Categories</h4>
                                 </div>
                                 <div className="card-body">
                                     <div className="row">
                                         <ForumCard
-                                            name="Forum Name"
-                                            description="Add a short description about your Forum here"
                                             subscribed={4}
                                             threads={138}
-                                            userActivity={ForumActivity}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="card mb-4 shadow-sm">
-                                <div className="card-header">
-                                    <h4>Category 2</h4>
-                                </div>
-                                <div className="card-body">
-                                    <div className="row">
-                                        <ForumCard
-                                            name="Forum Name"
-                                            description="Add a short description about your community here"
-                                            subscribed={2}
-                                            threads={9730}
-                                            userActivity={ForumActivity}
-                                        />
-                                        <ForumCard
-                                            name="Forum Name"
-                                            description="Add a short description about your community here"
-                                            subscribed={2}
-                                            threads={9730}
-                                            userActivity={ForumActivity}
-                                        />
-                                        <ForumCard
-                                            name="Forum Name"
-                                            description="Add a short description about your forum here"
-                                            subscribed={2}
-                                            threads={9730}
                                             userActivity={ForumActivity}
                                         />
                                     </div>
@@ -158,13 +126,8 @@ const App = () => {
                     } />  <Route path="/threads/:id" element={
                         <>
                             <div className="card mb-4 shadow-sm">
-                                <div className="card-header">
-                                    <BackButton
-                                        destination={"community"} />
-                                    <h4>All Threads</h4>
-                                </div>
                                 <div className="card-body">
-                                    <ThreadCard/>
+                                    <ThreadCard />
                                 </div>
                             </div>
                         </>
