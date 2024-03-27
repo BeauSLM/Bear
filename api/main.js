@@ -341,7 +341,7 @@ app.post("/login", async (req, res) => {
 });
 
 // validate login, take in username & password. 
-app.get("/login", async (req, res) => {
+app.post("/validateLogin", async (req, res) => {
     const loginInfo = req.body;
     // XXX: DELETE ME
     console.log(loginInfo);
