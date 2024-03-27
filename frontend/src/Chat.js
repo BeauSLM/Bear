@@ -23,9 +23,22 @@ const Chat = () => {
  return(
     
     <div className="card mb-4 shadow-sm" style={{display:"flex", justifyContent:'center', alignItems:'center', height:1000}}>
-        <div className="chat_container" >
+        <div className="chat_container"style={{height:100}}>
             <div style={{borderTop: '1px solid #000', borderBottom: '1px solid #000', borderRight: '1px solid #000', borderLeft: '1px solid #000'}}>
-                <UserSearch/>
+                <div>
+                    <UserSearch style={{width:100}}/>
+                </div>
+
+            </div>
+            <div>
+                <div style={{display: 'flex', flexDirection:'column', justifyContent:'space-between'}}>
+                    <div className="border" style={{height:500}}>
+                        messages
+                    </div>
+                    <div className="border" style={{height:300}}>
+                        <input type="text" ></input>
+                    </div>
+                </div>
             </div>
             
             
