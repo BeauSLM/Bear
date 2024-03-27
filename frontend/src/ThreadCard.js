@@ -2,6 +2,9 @@ import React from 'react';
 import threadPicture from './images/threadPic.png';
 import person from './images/person.jpg'
 import { useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const ThreadCard = ({ threadName, userName, threadDate, lastPostDate }) => {
 
@@ -9,6 +12,24 @@ const ThreadCard = ({ threadName, userName, threadDate, lastPostDate }) => {
     const handleViewThreadsClick = () => {
         navigate('/thread');
     };
+
+    const { id } = useParams();
+
+    const [threadList, setThreadList] = useState([]);
+
+    useEffect(() => {
+        axios.get(`http://localhost:3001/community_section/${id}`)
+            .then(response => {
+                console.log(response.data);
+                setThreadList(response.data);
+            })
+            .catch(error => {
+                // Handle error
+                console.log('Error fetching communities data:', error);
+            });
+    }, []);
+
+    console.log(threadList)
 
     return (
         <div className="card mb-2 shadow-sm">

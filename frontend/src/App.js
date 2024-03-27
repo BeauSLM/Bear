@@ -17,7 +17,6 @@ const App = () => {
     useEffect(() => {
         axios.get('http://localhost:3001/community')
             .then(response => {
-                console.log(response.data);
                 setCommunities(response.data);
             })
             .catch(error => {
@@ -62,8 +61,8 @@ const App = () => {
                                                 id={community.id}
                                                 name={community.name}
                                                 description={community.description}
-                                                subscribed={4} // Assuming a static value for subscribed and threads for now
-                                                threads={138} // You might want to make these dynamic as well
+                                                subscribed={4}
+                                                threads={138}
                                                 userActivity={userActivity}
                                             />
                                         ))}
@@ -156,7 +155,7 @@ const App = () => {
                             </div>
                         </>
 
-                    } />  <Route path="/threads" element={
+                    } />  <Route path="/threads/:id" element={
                         <>
                             <div className="card mb-4 shadow-sm">
                                 <div className="card-header">
@@ -178,22 +177,11 @@ const App = () => {
                             </div>
                         </>
                     } />
-                    <Route path="/thread" element={
+                    <Route path="/thread/:id" element={
                         <>
                             <div className="card mb-4 shadow-sm">
-                                <div className="card-header">
-                                    <BackButton
-                                        destination={"threads"} />
-                                    <h4>Thread</h4>
-                                </div>
                                 <div className="card-body">
-                                    {threads.map((thread, index) => (
-                                        <Thread
-                                            key={index}
-                                            userName={thread.userName}
-                                            lastPostDate={thread.lastPostDate}
-                                        />
-                                    ))}
+                                    <Thread/>
                                 </div>
                             </div>
                         </>
