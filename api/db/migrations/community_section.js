@@ -4,7 +4,7 @@ exports.up = function(knex, Promise) {
         table.int('community_id').notNullable().references('id').inTable('community'); // GUID
         table.string('section_name', 50).unique();
         table.string('description').notNullable();
-        table.timestamp('last_accessed').notNullable().defaultTo(knex.fn.now());
+        table.timestamp('last_active').notNullable().defaultTo(knex.fn.now());
     })
 };
 
