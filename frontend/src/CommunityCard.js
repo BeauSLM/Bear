@@ -9,6 +9,8 @@ const CommunityCard = () => {
         navigate(`/community/${id}`);
     };
 
+    
+
     const [communities, setCommunities] = useState([]);
     const [relatedSection, setRelatedSection] = useState([]);
     const [threads, setThreads] = useState([]);
@@ -43,7 +45,6 @@ const CommunityCard = () => {
         const postDate = new Date(dateString);
         const today = new Date();
         const timeDiff = today - postDate + (6 * 60 * 60 * 1000);
-        console.log(timeDiff);
 
         if (timeDiff < 60000) {
             return "just now";
