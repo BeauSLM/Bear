@@ -10,8 +10,11 @@ const LoginPage = () => {
 
     const handleLogin = (e) => {
         e.preventDefault();
-        axios.post('http://localhost:3001/login', { username, password })
+        console.log({ username, password });
+        axios.get('http://localhost:3001/login', { username, password })
             .then(response => {
+                
+                // Assume response contains a user token or some other identifier
                 localStorage.setItem('userToken', response.data.token);
                 navigate('/');
             })
@@ -20,6 +23,7 @@ const LoginPage = () => {
                 console.error('Login error', err);
             });
     };
+    
 
     return (
         <div className="container mt-5">

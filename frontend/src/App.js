@@ -22,7 +22,7 @@ const App = () => {
             <div className="container">
                 <Header />
                 <Routes>
-                    <Route path="/login" element={<LoginPage />} /> {/* Add the login route */}
+                    <Route path="/login" element={<LoginPage />} />
                     <Route path="/" element={
                         <>
                             <div className="card mb-4 shadow-sm">
