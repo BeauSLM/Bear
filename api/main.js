@@ -312,11 +312,29 @@ app.delete("/community/:id", async (req, res) => {
 
 // Create a new login entry
 app.post("/login", async (req, res) => {
-    const newLogin = req.body;
+    const { username, password } = req.body;
 
     try {
-        await db("login").insert(newLogin);
-        res.send("Login entry created successfully");
+        const newUser = {
+            name: username
+        }
+
+        const [userId] = await db("user").insert(newUser);
+
+        try {
+            const hashedPassword = await bcrypt.hash(password, 10);
+            const newLogin = {
+                user_id: userId,
+                username: username,
+                passwordHash: hashedPassword
+            };
+
+            await db("login").insert(newLogin);
+            res.send("Login entry created successfully");
+        } catch (bcryptError) {
+            console.error("Error hashing password:", bcryptError);
+            res.status(500).send("Error hashing password");
+        }
     } catch (error) {
         console.error(error);
         res.status(500).send("Error creating login entry");
@@ -723,19 +741,6 @@ app.get("/user/:userId", async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).send("Error fetching user entry");
-    }
-});
-
-// Create a new user entry
-app.post("/user", async (req, res) => {
-    const newUser = req.body;
-
-    try {
-        await db("user").insert(newUser);
-        res.send("User entry created successfully");
-    } catch (error) {
-        console.error(error);
-        res.status(500).send("Error creating user entry");
     }
 });
 
