@@ -4,16 +4,29 @@ const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
 
-export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
+// export const AuthProvider = ({ children }) => {
+//     const [user, setUser] = useState(null);
 
-    useEffect(() => {
+// useEffect(() => {
+//     const username = localStorage.getItem('username');
+//     const userId = localStorage.getItem('userToken'); // Assuming userToken is the userID
+//     if (username && userId) {
+//         setUser({ id: userId, username: username });
+//     }
+// }, []);
+
+// return (
+//     <AuthContext.Provider value={{ user, setUser }}>
+//         {children}
+//     </AuthContext.Provider>
+// );
+
+export const AuthProvider = ({ children }) => {
+    const [user, setUser] = useState(() => {
         const username = localStorage.getItem('username');
-        const userId = localStorage.getItem('userToken'); // Assuming userToken is the userID
-        if (username && userId) {
-            setUser({ id: userId, username: username });
-        }
-    }, []);
+        const userId = localStorage.getItem('userToken');
+        return username && userId ? { id: userId, username: username } : null;
+    });
 
     return (
         <AuthContext.Provider value={{ user, setUser }}>
@@ -21,3 +34,4 @@ export const AuthProvider = ({ children }) => {
         </AuthContext.Provider>
     );
 };
+

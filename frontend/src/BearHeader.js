@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { Dropdown } from 'react-bootstrap';
 
 const Header = () => {
-    const { user, setUser } = useAuth(); // Assume setUsername is provided by your AuthContext for updating the username
+    const { user, setUser } = useAuth();
     const navigate = useNavigate();
 
     const handleLogout = () => {

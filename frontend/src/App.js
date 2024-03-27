@@ -27,20 +27,20 @@ const App = () => {
                         <Route path="/login" element={<LoginPage />} />
                         <Route path="/register" element={<Register />} />
                         <Route path="/" element={
-                            // <RequireAuth>
-                            <>
-                                <div className="card mb-4 shadow-sm">
-                                    <div className="card-header">
-                                        <h4>Popular Communities</h4>
-                                    </div>
-                                    <div className="card-body">
-                                        <div className="row">
-                                            <CommunityCard />
+                            <RequireAuth>
+                                <>
+                                    <div className="card mb-4 shadow-sm">
+                                        <div className="card-header">
+                                            <h4>Popular Communities</h4>
+                                        </div>
+                                        <div className="card-body">
+                                            <div className="row">
+                                                <CommunityCard />
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </>
-                            // </RequireAuth>
+                                </>
+                            </RequireAuth>
                         } />
                         <Route path="/community/:id" element={
                             // <RequireAuth>

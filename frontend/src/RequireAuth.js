@@ -2,13 +2,15 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 
 const RequireAuth = ({ children }) => {
-    const { username } = useAuth();
+    // const { username } = useAuth();
+    const { user, setUser } = useAuth();
 
-    if (!username) {
-        // User is not logged in, redirect to login page
+    console.log("Current Username: ", user);
+
+    if (!user || user === "Guest") {
         return <Navigate to="/login" replace />;
     }
 
-    // User is logged in, allow access to the route
     return children;
 };
+export default RequireAuth;
