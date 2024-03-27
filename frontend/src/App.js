@@ -9,22 +9,22 @@ import BackButton from './BackButton';
 import Thread from './Thread';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-
+import Chat from './Chat'
 const App = () => {
 
-    const [communities, setCommunities] = useState([]);
+    const [communities, setCommunities] = useState(["blah, bleh, bloh "]);
 
-    useEffect(() => {
-        axios.get('http://localhost:3001/community')
-            .then(response => {
-                console.log(response.data);
-                setCommunities(response.data);
-            })
-            .catch(error => {
-                // Handle error
-                console.log('Error fetching communities data:', error);
-            });
-    }, []);
+    // useEffect(() => {
+    //     axios.get('http://localhost:3001/user')
+    //         .then(response => {
+    //             console.log(response.data);
+    //             setCommunities(response.data);
+    //         })
+    //         .catch(error => {
+    //             // Handle error
+    //             console.log('Error fetching communities data:', error);
+    //         });
+    // }, []);
 
     console.log(communities);
 

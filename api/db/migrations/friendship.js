@@ -1,7 +1,9 @@
 exports.up = function(knex, Promise) {
     return  knex.schema.createTable('friendship', function(table) {
-        table.integer('user_id').references('id').inTable('users').primary();
-        table.integer('friend_id').references('id').inTable('users');
+        table.increments('id').primary();
+        table.integer('user_id').references('id').inTable('user');
+        table.integer('friend_id').references('id').inTable('user');
+        table.timestamp('created_at').notNullable();
     });
 };
 

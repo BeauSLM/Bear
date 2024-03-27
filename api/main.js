@@ -792,6 +792,105 @@ app.delete('/user/:userId', async (req, res) => {
   }
 });
 
+// Get friends of a user WORK ON it
+app.get('/user/:userId/friends', async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const friends = await db('friendship')
+    .join('user', 'friend_id', 'user.id')
+    .select('user.id', 'user.username', 'user.avatar_url AS sender_avatar', 'user.last_online')
+    .where({ user_id: userId });
+
+    if (friends) {
+      res.json(friends);
+    } else {
+      res.status(404).send('No friends found');
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error fetching friend entries');
+  }
+});
+
+// app.post('/user/:userId/friends/', async (req, res) => {
+//   const {userId} = req.params;
+// });
+// Get all individual chats that a user has
+app.get('/user/:userId/chat', async (req, res) => {
+  const {userId} = req.params;
+  try {
+    const userChats = await db.select('chat_id').from('user_chat').where({ member_id: userId});
+    console.log(userChats);
+    const chatMessages = await db('message')
+    .join('chat', 'message.chat_id', 'chat.id')
+    .join('user', 'sender_id', 'user.id')
+    .select('message.chat_id','text', 'chat.start_date', 'sent_timestamp', 'read_timestamp', 'is_read', 'user.username AS sender_username', 'user.avatar_url AS sender_avater').where(
+      "chat_id", "in", 
+      db.select('chat_id').from('user_chat').where({ member_id: userId})
+
+    );
+ 
+    console.log(chatMessages);
+    if(chatMessages) {
+      res.json(chatMessages)
+    } else {
+      res.status(404).send('No previous chats found');
+    }
+
+  } catch(error) {
+    console.error(error);
+    res.status(500).send('Error fetching chat');   
+  }
+})
+// get latest chat messages
+app.get('/user/:userId/chat/latest', async (req, res) => {
+  const {userId} = req.params;
+  try {
+    const latestMessages = await db('message').max('sent_timestamp').groupBy('message.chat_id')
+    .join('chat', 'message.chat_id', 'chat.id')
+    .join('user', 'sender_id', 'user.id')
+    .select('message.chat_id','text', 'chat.start_date', 'sent_timestamp', 'read_timestamp', 'is_read', 'user.username AS sender_username', 'user.avatar_url AS sender_avater').where(
+      "chat_id", "in", 
+      db.select('chat_id').from('user_chat').where({ member_id: userId})
+    );
+    if(latestMessages) {
+      console.log(latestMessages);
+      res.json(latestMessages);
+    } else {
+      res.status(404).send('No previous messages');
+    }
+  } catch(error) {
+    console.error(error);
+    res.status(500).send('Error fetching chat notifications');   
+  }
+
+});
+
+// get latest unread messages
+app.get('/user/:userId/chat/new', async (req, res) => {
+  const {userId} = req.params;
+  
+  try {
+    const latestMessages = await db('message').max('sent_timestamp').groupBy('message.chat_id')
+    .havingNull('read_timestamp')
+    .join('chat', 'message.chat_id', 'chat.id')
+    .join('user', 'sender_id', 'user.id')
+    .select('message.chat_id','text', 'chat.start_date', 'sent_timestamp', 'read_timestamp', 'user.username AS sender_username', 'user.avatar_url AS sender_avater').where(
+      "chat_id", "in", 
+      db.select('chat_id').from('user_chat').where({ member_id: userId})
+    );
+    if(latestMessages) {
+      console.log(latestMessages);
+      res.json(latestMessages);
+    } else {
+      res.status(404).send('No previous messages');
+    }
+  } catch(error) {
+    console.error(error);
+    res.status(500).send('Error fetching chat notifications');   
+  }
+
+});
 const PORT = 3001;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

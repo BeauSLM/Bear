@@ -1,14 +1,13 @@
 exports.seed = function (knex, Promise) {
-    return knex("user")
-        .del()
+    return knex("reply_like")
+        .truncate()
         .then(function () {
-            return knex("user").insert([
+            return knex("reply_like").insert([
                 {
-                    time: knex.fn.now()
+                    thread_id: 1,
+                    reply_id: 1,
+                    user_id: 1,
                 },
-                {
-                    time: knex.fn.now()
-                }
             ]);
         });
-    };
+};

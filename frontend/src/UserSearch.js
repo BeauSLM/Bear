@@ -3,13 +3,14 @@ import './ChatBox.css'
 function UserSearch() {
 
     useEffect(() => {
-        fetch('https://jsonplaceholder.typicode.com/users') // https://localhost:3001/user
+        fetch('http://localhost:3001/user') // http://localhost:3001/user
         .then(res => res.json())
         .then(data => {
             setFilterResults(data);
+            
         })
         .catch(err => console.log(err));
-
+       
     }, [])
     const [results, setResults] = useState([]);
     const [filterResults, setFilterResults] = useState([]);
@@ -25,7 +26,7 @@ function UserSearch() {
     }
     return (
         <div className='search__top'>
-            <div className='searchbar'>
+            <div className='searchbar' >
                 <input className="searchbar_input" type="text" placeholder='Search' onChange={e => handleFilter(e.target.value)}/>
             </div>
             <div className='search__results'>

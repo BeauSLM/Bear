@@ -10,4 +10,5 @@ module.exports = {
       directory: __dirname + "/seeds",
     },
   },
+  useNullAsDefault: true
 };

@@ -1,10 +1,12 @@
 exports.up = function(knex, Promise) {
     return  knex.schema.createTable('message', function(table) {
-        table.integer('message_id').primary();
-        table.integer('conversation_id'); //references conversation PK
+        table.increments('id').primary();
+        table.integer('chat_id').references('id').inTable('chat');
+        table.integer('sender_id').references('id').inTable('user');
+        table.string('text').notNullable();
         table.timestamp('sent_timestamp').notNullable();
-        table.timestamp('received_timestamp').notNullable();
-        table.integer('friend_id').references('id').inTable('users');
+        table.timestamp('read_timestamp');
+
     });
 };
 
