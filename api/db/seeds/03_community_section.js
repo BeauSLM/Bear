@@ -8,6 +8,11 @@ exports.seed = function (knex, Promise) {
                     section_name: "section",
                     description: "like most things on the internet, reading this is totally a great use of your time...",
                 },
+                {
+                    community_id: 1,
+                    section_name: "other section",
+                    description: "jalksfjldaksjflaksdjf",
+                },
             ]);
         });
 };
