@@ -325,12 +325,11 @@ app.post("/login", async (req, res) => {
             const hashedPassword = await bcrypt.hash(password, 10);
             const newLogin = {
                 user_id: userId,
-                username: username,
                 passwordHash: hashedPassword
             };
 
             await db("login").insert(newLogin);
-            res.send("Login entry created successfully");
+            res.json({ user_id: userId });
         } catch (bcryptError) {
             console.error("Error hashing password:", bcryptError);
             res.status(500).send("Error hashing password");
