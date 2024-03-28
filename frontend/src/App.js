@@ -15,6 +15,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import CommunityForm from './CreateCommunity';
 import CreateCommunitySection from './CreateCommunitySection';
 import CreateThreadGroup from './CreateThreadGroup';
+import AdminPage from './AdminPage';
 
 const App = () => {
 
@@ -27,20 +28,20 @@ const App = () => {
                         <Route path="/login" element={<LoginPage />} />
                         <Route path="/register" element={<Register />} />
                         <Route path="/" element={
-                            // <RequireAuth>
-                            <>
-                                <div className="card mb-4 shadow-sm">
-                                    <div className="card-header">
-                                        <h4>Popular Communities</h4>
-                                    </div>
-                                    <div className="card-body">
-                                        <div className="row">
-                                            <CommunityCard />
+                            <RequireAuth>
+                                <>
+                                    <div className="card mb-4 shadow-sm">
+                                        <div className="card-header">
+                                            <h4>Popular Communities</h4>
+                                        </div>
+                                        <div className="card-body">
+                                            <div className="row">
+                                                <CommunityCard />
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </>
-                            // </RequireAuth>
+                                </>
+                            </RequireAuth>
                         } />
                         <Route path="/community/:id" element={
                             // <RequireAuth>
@@ -83,6 +84,11 @@ const App = () => {
                         <Route path="/createThreadGroup" element={
                             <>
                                 <CreateThreadGroup />
+                            </>
+                        } />
+                        <Route path="/adminPage" element={
+                            <>
+                                <AdminPage />
                             </>
                         } />
                     </Routes>

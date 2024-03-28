@@ -8,21 +8,22 @@ import { useNavigate } from 'react-router-dom';
 import { Dropdown } from 'react-bootstrap';
 
 const Header = () => {
-    const { username, setUsername } = useAuth(); // Assume setUsername is provided by your AuthContext for updating the username
+    const { user, setUser } = useAuth();
     const navigate = useNavigate();
 
     const handleLogout = () => {
         localStorage.removeItem('userToken');
         localStorage.removeItem('username');
-        setUsername('');
+        setUser(null);
         navigate('/login');
     };
 
     return (
         <header className="d-flex justify-content-between align-items-center p-3">
-            <div>
+            <div className="d-flex flex-column align-items-start">
                 <img src={logo} width={50} height={50} alt="Logo" />
                 <span>BEAR</span>
+                <button style={{ fontSize: '0.875rem', marginBottom: '0.25rem' }} className="btn btn-primary" onClick={() => navigate('/adminPage')}>Create Community</button>
             </div>
             <div>
                 <button className="btn me-2"><img src={message} width={30} height={30} alt="Messages" /></button>
@@ -30,8 +31,8 @@ const Header = () => {
                 <div className="d-flex align-items-center">
                     <div className="dropdown">
                         <Dropdown>
-                            <Dropdown.Toggle variant="secondary" id="dropdown-basic">
-                                {username}
+                        <Dropdown.Toggle variant="secondary" id="dropdown-basic">
+                                {user ? user.username : 'Guest'}
                             </Dropdown.Toggle>
 
                             <Dropdown.Menu>

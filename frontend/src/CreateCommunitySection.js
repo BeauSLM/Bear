@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const CreateCommunitySection = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     community_id: '',
     section_name: '',
@@ -41,10 +44,13 @@ const CreateCommunitySection = () => {
       console.error('Error creating community section:', error);
       alert('Failed to create community section. Check console for details.');
     }
+    navigate('/');
   };
 
   return (
+
     <form onSubmit={handleSubmit}>
+      <button className="btn btn-secondary" onClick={() => navigate('/adminPage')}>Back</button>
       <div className="mb-3">
         <label htmlFor="community_id" className="form-label">Community</label>
         <select

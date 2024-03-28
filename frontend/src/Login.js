@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useAuth } from './AuthContext';
+import { useAuth } from './AuthContext'; // Make sure this path is correct
 
 const LoginPage = () => {
     const navigate = useNavigate();
-    const { setUsername } = useAuth();
+    const { setUser } = useAuth(); // Correctly include setUser
     const [username, setUsernameLocal] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -18,9 +18,11 @@ const LoginPage = () => {
             }
         })
             .then(response => {
-                localStorage.setItem('userToken', response.data.user_id);
-                localStorage.setItem('username', username); 
-                setUsername(username);
+                const userId = response.data.user_id;
+                localStorage.setItem('userToken', userId);
+                localStorage.setItem('username', username);
+                setUser({ id: userId, username: username });
+
                 navigate('/');
             })
             .catch(err => {

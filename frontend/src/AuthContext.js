@@ -1,4 +1,3 @@
-// In AuthContext.js
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext();
@@ -6,18 +5,16 @@ const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-    const [username, setUsername] = useState('');
-
-    useEffect(() => {
-        const storedUsername = localStorage.getItem('username');
-        if (storedUsername) {
-            setUsername(storedUsername);
-        }
-    }, []);
+    const [user, setUser] = useState(() => {
+        const username = localStorage.getItem('username');
+        const userId = localStorage.getItem('userToken');
+        return username && userId ? { id: userId, username: username } : null;
+    });
 
     return (
-        <AuthContext.Provider value={{ username, setUsername }}>
+        <AuthContext.Provider value={{ user, setUser }}>
             {children}
         </AuthContext.Provider>
     );
 };
+

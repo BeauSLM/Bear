@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-
+import { useNavigate } from 'react-router-dom';
 
 const CommunityForm = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     tagline: '',
@@ -27,10 +28,12 @@ const CommunityForm = () => {
       console.error('Error creating community:', error);
       alert('Failed to create community. Check console for details.');
     }
+    navigate('/');
   };
 
   return (
     <form onSubmit={handleSubmit}>
+      <button className="btn btn-secondary" onClick={() => navigate('/adminPage')}>Back</button>
       <div className="mb-3">
         <label htmlFor="name" className="form-label">Name</label>
         <input type="text" className="form-control" id="name" name="name" value={formData.name} onChange={handleChange} required />

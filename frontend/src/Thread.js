@@ -4,16 +4,22 @@ import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import BackButton from './BackButton';
-
+import { useAuth } from './AuthContext';
 
 const Thread = () => {
 
     const { id } = useParams();
+    const { user, setUser } = useAuth();
 
     const [thread, setThread] = useState([]);
     const [threadUsersData, setThreadUsersData] = useState([]);
     const [threadLikeCount, setThreadLikeCount] = useState(0);
     const [newReplyContent, setNewReplyContent] = useState('');
+    const [isLoadingReplies, setIsLoadingReplies] = useState(true);
+    const [repliesLastFetched, setRepliesLastFetched] = useState(Date.now());
+    const [reply, setReply] = useState([]);
+    const [replyUserData, setReplyUserData] = useState([]);
+
 
     useEffect(() => {
         axios.get(`http://localhost:3001/thread/${id}`)
@@ -42,87 +48,99 @@ const Thread = () => {
             });
     }, [id]);
 
-    const [reply, setReply] = useState([]);
-    const [replyUserData, setReplyUserData] = useState([]);
+
 
     useEffect(() => {
+        setIsLoadingReplies(true); // Start loading when component mounts or `id` changes
         axios.get(`http://localhost:3001/reply`)
             .then(response => {
                 const relevantReplies = response.data.filter(reply => reply.thread_id.toString() === id);
-                const detailedReplyPromises = relevantReplies.map(reply =>
-                    axios.get(`http://localhost:3001/reply/${id}/${reply.reply_id}`)
-                );
-                setReply(detailedReplyPromises);
+                setReply(relevantReplies); // Keep just the replies in their state
 
-                return Promise.all(detailedReplyPromises);
-            })
-            .then(detailedResponses => {
-                const detailedReplies = detailedResponses.map(response => response.data);
-                setReply(detailedReplies);
-                const userIds = [...new Set(detailedReplies.map(reply => reply.user_id))];
-                const userPromises = userIds.map(userId =>
-                    axios.get(`http://localhost:3001/user/${userId}`)
+                const userPromises = relevantReplies.map(reply =>
+                    axios.get(`http://localhost:3001/user/${reply.user_id}`).then(userResponse => ({
+                        ...userResponse.data,
+                        reply_id: reply.reply_id // Associate user data with the reply ID
+                    }))
                 );
+
                 return Promise.all(userPromises);
             })
-            .then(userResponses => {
-                const usersData = userResponses.map(response => response.data);
-                setReplyUserData(usersData);
+            .then(usersData => {
+                setReplyUserData(usersData); // This now contains unique entries per reply, not per user
+                setIsLoadingReplies(false); // Loading complete
             })
             .catch(error => {
-                console.log('Error fetching detailed replies or user data:', error);
+                console.log('Error fetching replies or user data:', error);
+                setIsLoadingReplies(false); // Ensure loading is false even if there's an error
             });
-    }, [id]);
+    }, [id, repliesLastFetched]);
 
+    // const fetchReplies = () => {
+    //     setIsLoadingReplies(true);
+    //     const relevantReplies = null;
+    //     axios.get(`http://localhost:3001/reply`)
+    //         .then(response => {
+    //             relevantReplies = response.data.filter(reply => reply.thread_id.toString() === id);
+    //             setReply(relevantReplies);
 
-    const fetchReplies = () => {
-        axios.get(`http://localhost:3001/reply`)
-            .then(response => {
-                const relevantReplies = response.data.filter(reply => reply.thread_id.toString() === id);
-                return Promise.all(relevantReplies.map(reply =>
-                    axios.get(`http://localhost:3001/reply/${id}/${reply.reply_id}`)
-                ));
-            })
-            .then(detailedResponses => {
-                const detailedReplies = detailedResponses.map(response => response.data);
-                setReply(detailedReplies);
-                const userIds = [...new Set(detailedReplies.map(reply => reply.user_id))];
-                return Promise.all(userIds.map(userId =>
-                    axios.get(`http://localhost:3001/user/${userId}`)
-                ));
-            })
-            .then(userResponses => {
-                const usersData = userResponses.map(response => response.data);
-                setReplyUserData(usersData);
-            })
-            .catch(error => {
-                console.log('Error fetching detailed replies or user data:', error);
-            });
-    };
+    //             const userPromises = relevantReplies.map(reply =>
+    //                 axios.get(`http://localhost:3001/user/${reply.user_id}`)
+    //             );
+
+    //             return Promise.all(userPromises);
+    //         })
+    //         .then(userResponses => {
+    //             // Process and map user data to replies
+    //             const usersData = userResponses.map((response, index) => ({
+    //                 ...response.data,
+    //                 reply_id: relevantReplies[index].reply_id
+    //             }));
+    //             setReplyUserData(usersData);
+    //         })
+    //         .catch(error => {
+    //             console.error('Error fetching detailed replies or user data:', error);
+    //         })
+    //         .finally(() => {
+    //             setIsLoadingReplies(false); // Loading is complete, regardless of success or failure
+    //         });
+    // };
+
 
     const handleSubmitReply = (event) => {
         event.preventDefault();
+        setIsLoadingReplies(true);
         axios.post(`http://localhost:3001/reply`, {
             thread_id: id,
-            user_id: 1,
+            user_id: user.id,
             content: newReplyContent,
         })
             .then(response => {
                 console.log('Reply posted successfully');
+                const newReply = response.data;
+                setReply(prevReplies => [...prevReplies, newReply]);
+                setReplyUserData(prevUserData => [...prevUserData, { ...user, reply_id: newReply.reply_id }]);
                 setNewReplyContent('');
-                fetchReplies();
+                setRepliesLastFetched(Date.now()); // Trigger the useEffect to refetch replies
             })
+
             .catch(error => {
-                console.log('Error posting reply:', error);
+                console.error('Error posting reply:', error);
+            })
+            .finally(() => {
+
+                setIsLoadingReplies(false);
             });
     };
+
+
+    console.log(replyUserData);
 
 
     const getDaysAgo = (dateString) => {
         const postDate = new Date(dateString);
         const today = new Date();
         const timeDiff = today - postDate + (6 * 60 * 60 * 1000);
-        console.log(timeDiff);
 
         if (timeDiff < 60000) {
             return "just now";
@@ -137,14 +155,15 @@ const Thread = () => {
         }
     };
 
-
-
     const daysAgo = getDaysAgo(thread.created_at);
 
     if (!thread) {
         return <div>Loading...</div>;
     }
 
+    if (isLoadingReplies) {
+        return <div>Loading replies...</div>;
+    }
 
     return (
         <div className="card mb-2 shadow-sm">
@@ -184,14 +203,15 @@ const Thread = () => {
                 <div className="row align-items-center">
 
                     <div className="col-12 col-md-12 border-start">
-                        {reply.map((reply, index) => (
+                        {!isLoadingReplies && reply.map((reply, index) => (
                             <div key={reply.reply_id} className="card-body p-2 border-top">
                                 <div className="row align-items-center">
                                     <div className="col-3 col-md-3 d-flex align-items-center">
                                         <img src={person} width={50} height={50} alt="Profile" className="me-2" />
                                     </div>
                                     <div className="col-6 col-md-6">
-                                        <strong>by {replyUserData[0]?.name}</strong>
+                                        {/* Safe access using optional chaining */}
+                                        <strong>by {replyUserData.find(user => user.reply_id === reply.reply_id)?.name || 'Loading...'}</strong>
                                         <p>RE: {reply.content}</p>
                                     </div>
                                     <div className="col-3 col-md-3 text-end">
@@ -200,6 +220,8 @@ const Thread = () => {
                                 </div>
                             </div>
                         ))}
+
+
                     </div>
 
                 </div>

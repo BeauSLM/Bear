@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useAuth } from './AuthContext'; // Import the useAuth hook
+import { useAuth } from './AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const CreateThread = () => {
-  const auth = useAuth(); // Use the useAuth hook to access the current user's details
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     section_id: '',
     title: '',
     content: '',
-    user_id: auth.user ? auth.user.id : null, // Set user_id from the auth context
+    user_id: user ? user.id : null,
   });
 
   const [sections, setSections] = useState([]);
@@ -36,29 +39,31 @@ const CreateThread = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (!auth.user) {
+    if (!user) {
       alert('You must be logged in to create a thread.');
       return;
     }
     try {
       // Update formData with the latest user_id in case it was initially null
-      const completeFormData = { ...formData, user_id: auth.user.id };
+      const completeFormData = { ...formData, user_id: user.id };
       await axios.post('http://localhost:3001/thread', completeFormData);
       alert('Thread created successfully!');
-      setFormData({ section_id: '', title: '', content: '', user_id: auth.user.id }); // Reset form but keep user_id
+      setFormData({ section_id: '', title: '', content: '', user_id: user.id }); // Reset form but keep user_id
     } catch (error) {
       console.error('Error creating thread:', error);
       alert('Failed to create thread. Check console for details.');
     }
+    navigate('/');
   };
 
   // Ensure that the user is logged in before rendering the form
-  if (!auth.user) {
+  if (!user) {
     return <div>Please log in to create a thread.</div>;
   }
 
   return (
     <form onSubmit={handleSubmit}>
+      <button className="btn btn-secondary" onClick={() => navigate('/adminPage')}>Back</button>
       <div className="mb-3">
         <label htmlFor="section_id" className="form-label">Section</label>
         <select
