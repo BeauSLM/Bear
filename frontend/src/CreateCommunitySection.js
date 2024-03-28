@@ -39,7 +39,7 @@ const CreateCommunitySection = () => {
     try {
       await axios.post('http://localhost:3001/community_section', formData);
       alert('Community section created successfully!');
-      setFormData({ community_id: '', section_name: '', description: '' }); // Reset form
+      setFormData({ community_id: '', section_name: '', description: '' });
     } catch (error) {
       console.error('Error creating community section:', error);
       alert('Failed to create community section. Check console for details.');

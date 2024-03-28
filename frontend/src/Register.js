@@ -4,14 +4,9 @@ import axios from 'axios';
 import { useAuth } from './AuthContext';
 
 const Register = () => {
-    // const navigate = useNavigate();
-    // const { setUsername: setGlobalUsername } = useAuth();
-    // const [username, setUsernameLocal] = useState('');
-    // const [password, setPassword] = useState('');
-    // const [error, setError] = useState('');
 
     const navigate = useNavigate();
-    const { setUser } = useAuth(); // Correctly include setUser
+    const { setUser } = useAuth();
     const [username, setUsernameLocal] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -27,7 +22,7 @@ const Register = () => {
                 const userId = response.data.user_id;
                 localStorage.setItem('userToken', userId);
                 localStorage.setItem('username', username);
-                setUser({ id: userId, username: username }); // Now this should work
+                setUser({ id: userId, username: username });
                 navigate('/');
             })
             .catch(err => {

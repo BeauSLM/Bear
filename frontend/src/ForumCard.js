@@ -8,14 +8,14 @@ const ForumCard = () => {
 
     const [communitySection, setCommunitySection] = useState([]);
     const [relatedThreads, setRelatedThreads] = useState([]);
-    const [isCommunitySectionLoaded, setIsCommunitySectionLoaded] = useState(false); // State to track if community section has been loaded
+    const [isCommunitySectionLoaded, setIsCommunitySectionLoaded] = useState(false); 
 
     useEffect(() => {
         // Fetch community section details
         axios.get(`http://localhost:3001/community_section/${id}`)
             .then(response => {
                 setCommunitySection(response.data);
-                setIsCommunitySectionLoaded(true); // Set to true once community section is loaded
+                setIsCommunitySectionLoaded(true);
             })
             .catch(error => {
                 console.log('Error fetching community section data:', error);
@@ -95,11 +95,11 @@ const ForumCard = () => {
                         </div>
 
                         <div className="col-md-4 d-flex justify-content-end">
-                            <div className="d-flex flex-column align-items-end w-100"> {/* Ensure full width */}
+                            <div className="d-flex flex-column align-items-end w-100">
                                 <span className="badge bg-success mb-2" style={{ fontSize: '0.75rem' }}>User Activity</span>
                                 {
                                     relatedThreads[section.section_id] && relatedThreads[section.section_id].map(thread => (
-                                        <div key={thread.id} className="text-end mb-3 w-100"> {/* Add bottom margin and ensure full width */}
+                                        <div key={thread.id} className="text-end mb-3 w-100">
                                             <strong style={{ fontSize: '0.875rem' }}>{thread.title}</strong>
                                             <p style={{ fontSize: '0.75rem' }}>{getDaysAgo(thread.created_at)}</p>
                                         </div>

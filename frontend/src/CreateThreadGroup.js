@@ -44,11 +44,10 @@ const CreateThread = () => {
       return;
     }
     try {
-      // Update formData with the latest user_id in case it was initially null
       const completeFormData = { ...formData, user_id: user.id };
       await axios.post('http://localhost:3001/thread', completeFormData);
       alert('Thread created successfully!');
-      setFormData({ section_id: '', title: '', content: '', user_id: user.id }); // Reset form but keep user_id
+      setFormData({ section_id: '', title: '', content: '', user_id: user.id });
     } catch (error) {
       console.error('Error creating thread:', error);
       alert('Failed to create thread. Check console for details.');
@@ -56,7 +55,6 @@ const CreateThread = () => {
     navigate('/');
   };
 
-  // Ensure that the user is logged in before rendering the form
   if (!user) {
     return <div>Please log in to create a thread.</div>;
   }
