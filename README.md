@@ -91,3 +91,12 @@ cd api/
 
 ./test-api.sh
 ```
+# How to clear and reset the database
+
+```bash
+cd api/
+
+npm run populate-db
+```
+
+This refreshes the database to have some useful default values
