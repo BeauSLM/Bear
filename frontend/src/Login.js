@@ -26,9 +26,6 @@ const LoginPage = () => {
                 navigate('/');
             })
             .catch(err => {
-                if (username == "admin" && password == "admin") {
-                    navigate('/adminPage');
-                }
                 setError('Invalid username or password');
                 console.error('Login error', err);
             });

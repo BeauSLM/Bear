@@ -20,9 +20,10 @@ const Header = () => {
 
     return (
         <header className="d-flex justify-content-between align-items-center p-3">
-            <div>
+            <div className="d-flex flex-column align-items-start">
                 <img src={logo} width={50} height={50} alt="Logo" />
                 <span>BEAR</span>
+                <button style={{ fontSize: '0.875rem', marginBottom: '0.25rem' }} className="btn btn-primary" onClick={() => navigate('/adminPage')}>Create Community</button>
             </div>
             <div>
                 <button className="btn me-2"><img src={message} width={30} height={30} alt="Messages" /></button>
