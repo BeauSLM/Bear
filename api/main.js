@@ -406,6 +406,27 @@ app.get("/reply_like/:threadId/:replyId/:userId", async (req, res) => {
     }
 });
 
+app.get("/reply_like/:threadId/:replyId", async (req, res) => {
+    const { threadId, replyId, userId } = req.params;
+
+    try {
+        const replyLike = await db
+            .select()
+            .from("reply_like")
+            .where({ thread_id: threadId, reply_id: replyId })
+            .first(); // Assuming only one result is expected
+
+        if (replyLike) {
+            res.json(replyLike);
+        } else {
+            res.status(404).send("Reply Like entry not found");
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error fetching reply_like entry");
+    }
+});
+
 // Create a new reply_like entry
 app.post("/reply_like", async (req, res) => {
     const newReplyLike = req.body;
@@ -458,6 +479,26 @@ app.get("/reply/:threadId/:replyId", async (req, res) => {
             .from("reply")
             .where({ thread_id: threadId, reply_id: replyId })
             .first(); // Assuming only one result is expected
+
+        if (reply) {
+            res.json(reply);
+        } else {
+            res.status(404).send("Reply not found");
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error fetching reply");
+    }
+});
+
+app.get("/reply/:threadId", async (req, res) => {
+    const { threadId, replyId } = req.params;
+
+    try {
+        const reply = await db
+            .select()
+            .from("reply")
+            .where({ thread_id: threadId })
 
         if (reply) {
             res.json(reply);

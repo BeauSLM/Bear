@@ -77,6 +77,21 @@ const Thread = () => {
             });
     }, [id, repliesLastFetched]);
 
+    useEffect(() => {
+        setIsLoadingReplies(true);
+        axios.get(`http://localhost:3001/reply/${id}`) // Adjusted to fetch replies for the thread
+            .then(response => {
+                const relevantReplies = response.data;
+                setReplyLikeCount(relevantReplies);
+            })
+            .catch(error => {
+                console.log('Error fetching replies or like data:', error);
+                setIsLoadingReplies(false);
+            });
+    }, [id, repliesLastFetched]);
+
+
+
 
 
     const handleSubmitReply = (event) => {
@@ -143,10 +158,9 @@ const Thread = () => {
 
     };
     const handleReplyLike = (replyId) => {
-        // Check if the reply is already liked by the user
         if (replyLikeCounts[replyId]) {
             console.log('Already liked');
-            return; // Stop if the reply is already liked
+            return;
         }
 
         const likeData = {
@@ -158,10 +172,9 @@ const Thread = () => {
         axios.post('http://localhost:3001/reply_like', likeData)
             .then(() => {
                 console.log('Like added successfully');
-                // Only set the like count to 1 here, indicating the reply is liked
                 setReplyLikeCounts(prevCounts => ({
                     ...prevCounts,
-                    [replyId]: 1 // Set to 1 instead of incrementing
+                    [replyId]: 1
                 }));
             })
             .catch(error => {
@@ -169,9 +182,36 @@ const Thread = () => {
             });
     };
 
-
-
     const daysAgo = getDaysAgo(thread.created_at);
+
+    const fetchRepliesWithLikes = async (threadId) => {
+        try {
+            const repliesResponse = await axios.get(`http://localhost:3001/reply/${threadId}`);
+            const replies = repliesResponse.data;
+
+            const repliesWithLikesPromises = replies.map(async (reply) => {
+                const replyLikesResponse = await axios.get(`http://localhost:3001/reply_like/${id}/${reply.reply_id}`);
+                console.log(replyLikesResponse)
+                const likeCount = replyLikesResponse.data.length;
+                return { ...reply, likeCount };
+            });
+
+            const repliesWithLikes = await Promise.all(repliesWithLikesPromises);
+            return repliesWithLikes;
+
+        } catch (error) {
+            console.error('Error fetching replies with like counts:', error);
+            return [];
+        }
+    };
+
+    const [repliesWithLikes, setRepliesWithLikes] = useState([]);
+
+    useEffect(() => {
+        fetchRepliesWithLikes(id)
+            .then(data => setRepliesWithLikes(data));
+    }, [id]);
+
 
     if (!thread) {
         return <div>Loading...</div>;
@@ -215,11 +255,11 @@ const Thread = () => {
                 </div>
             </div>
 
-            {/* REPLYS */}
+            {/* REPLIES */}
             <div className="card-body p-2">
                 <div className="row align-items-center">
                     <div className="col-12 col-md-12 border-start">
-                        {!isLoadingReplies && reply.map((reply, index) => (
+                        {!isLoadingReplies && repliesWithLikes.map((reply) => (
                             <div key={reply.reply_id} className="card-body p-2 border-top">
                                 <div className="row align-items-center">
                                     <div className="col-3 col-md-3 d-flex align-items-center">
@@ -231,7 +271,7 @@ const Thread = () => {
                                     </div>
                                     <div className="col-3 col-md-3 text-end">
                                         <strong>{getDaysAgo(reply.created_at)}</strong>
-                                        <p>{replyLikeCounts[reply.reply_id] || 0} like(s)</p>
+                                        <p>{reply.likeCount || 0} like(s)</p> {/* Display the like count here */}
                                         <button className="btn btn-outline-primary btn-sm" onClick={() => handleReplyLike(reply.reply_id)}>Like</button>
                                     </div>
                                 </div>
@@ -240,6 +280,7 @@ const Thread = () => {
                     </div>
                 </div>
             </div>
+
 
 
             <div className="card-footer">
