@@ -44,7 +44,6 @@ const App = () => {
                             </RequireAuth>
                         } />
                         <Route path="/community/:id" element={
-                            // <RequireAuth>
                             <>
                                 <BackButton destination={""} />
                                 <div className="card mb-4 shadow-sm">
@@ -56,14 +55,11 @@ const App = () => {
                                     </div>
                                 </div>
                             </>
-                            // </RequireAuth>
                         } />
                         <Route path="/threads/:id" element={
-                            // <RequireAuth>
                             <>
                                 <ThreadCard />
                             </>
-                            // </RequireAuth>
                         } />
                         <Route path="/thread/:id" element={
                             <>

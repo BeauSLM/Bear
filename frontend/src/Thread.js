@@ -79,7 +79,7 @@ const Thread = () => {
 
     useEffect(() => {
         setIsLoadingReplies(true);
-        axios.get(`http://localhost:3001/reply/${id}`) // Adjusted to fetch replies for the thread
+        axios.get(`http://localhost:3001/reply/${id}`)
             .then(response => {
                 const relevantReplies = response.data;
                 setReplyLikeCount(relevantReplies);
@@ -130,7 +130,7 @@ const Thread = () => {
             return "just now";
         } else if (timeDiff >= 6000 && timeDiff <= 3600000) {
             return "< 1 hour ago"
-        } else if (timeDiff <= 86400000) { // 24 hours in milliseconds
+        } else if (timeDiff <= 86400000) {
             const hours = Math.floor(timeDiff / (1000 * 60 * 60));
             return hours + (hours === 1 ? " hour ago" : " hours ago");
         } else {
@@ -271,7 +271,6 @@ const Thread = () => {
                                     </div>
                                     <div className="col-3 col-md-3 text-end">
                                         <strong>{getDaysAgo(reply.created_at)}</strong>
-                                        <p>{reply.likeCount || 0} like(s)</p> {/* Display the like count here */}
                                         <button className="btn btn-outline-primary btn-sm" onClick={() => handleReplyLike(reply.reply_id)}>Like</button>
                                     </div>
                                 </div>
