@@ -48,7 +48,9 @@ const CreateCommunitySection = () => {
   };
 
   return (
+
     <form onSubmit={handleSubmit}>
+      <button className="btn btn-secondary" onClick={() => navigate('/adminPage')}>Back</button>
       <div className="mb-3">
         <label htmlFor="community_id" className="form-label">Community</label>
         <select

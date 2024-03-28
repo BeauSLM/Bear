@@ -15,6 +15,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import CommunityForm from './CreateCommunity';
 import CreateCommunitySection from './CreateCommunitySection';
 import CreateThreadGroup from './CreateThreadGroup';
+import AdminPage from './AdminPage';
 
 const App = () => {
 
@@ -83,6 +84,11 @@ const App = () => {
                         <Route path="/createThreadGroup" element={
                             <>
                                 <CreateThreadGroup />
+                            </>
+                        } />
+                        <Route path="/adminPage" element={
+                            <>
+                                <AdminPage />
                             </>
                         } />
                     </Routes>

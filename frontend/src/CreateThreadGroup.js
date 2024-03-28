@@ -63,6 +63,7 @@ const CreateThread = () => {
 
   return (
     <form onSubmit={handleSubmit}>
+      <button className="btn btn-secondary" onClick={() => navigate('/adminPage')}>Back</button>
       <div className="mb-3">
         <label htmlFor="section_id" className="form-label">Section</label>
         <select

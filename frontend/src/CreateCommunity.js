@@ -33,6 +33,7 @@ const CommunityForm = () => {
 
   return (
     <form onSubmit={handleSubmit}>
+      <button className="btn btn-secondary" onClick={() => navigate('/adminPage')}>Back</button>
       <div className="mb-3">
         <label htmlFor="name" className="form-label">Name</label>
         <input type="text" className="form-control" id="name" name="name" value={formData.name} onChange={handleChange} required />
