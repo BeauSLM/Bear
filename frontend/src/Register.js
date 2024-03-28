@@ -4,8 +4,14 @@ import axios from 'axios';
 import { useAuth } from './AuthContext';
 
 const Register = () => {
+    // const navigate = useNavigate();
+    // const { setUsername: setGlobalUsername } = useAuth();
+    // const [username, setUsernameLocal] = useState('');
+    // const [password, setPassword] = useState('');
+    // const [error, setError] = useState('');
+
     const navigate = useNavigate();
-    const { setUsername: setGlobalUsername } = useAuth();
+    const { setUser } = useAuth(); // Correctly include setUser
     const [username, setUsernameLocal] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -17,16 +23,17 @@ const Register = () => {
                 'Content-Type': 'application/json'
             }
         })
-        .then(response => {
-            localStorage.setItem('userToken', response.data.user_id);
-            localStorage.setItem('username', username); 
-            setGlobalUsername(username);
-            navigate('/');
-        })
-        .catch(err => {
-            setError('Invalid username or password');
-            console.error('Login error', err);
-        });
+            .then(response => {
+                const userId = response.data.user_id;
+                localStorage.setItem('userToken', userId);
+                localStorage.setItem('username', username);
+                setUser({ id: userId, username: username }); // Now this should work
+                navigate('/');
+            })
+            .catch(err => {
+                setError('Invalid username or password');
+                console.error('Login error', err);
+            });
     };
 
     const handleCreateAccount = (e) => {

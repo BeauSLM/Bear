@@ -67,7 +67,7 @@ const Thread = () => {
                 return Promise.all(userPromises);
             })
             .then(userResponses => {
-                const usersData = userResponses.map(response => response.data);
+                const usersData = userResponses.map(response => ({ ...response.data, custom_id: response.data.id }));
                 setReplyUserData(usersData);
             })
             .catch(error => {
@@ -93,7 +93,7 @@ const Thread = () => {
                 ));
             })
             .then(userResponses => {
-                const usersData = userResponses.map(response => response.data);
+                const usersData = userResponses.map(response => ({ ...response.data, custom_id: response.data.id }));
                 setReplyUserData(usersData);
             })
             .catch(error => {
@@ -148,7 +148,7 @@ const Thread = () => {
         }
     };
 
-
+    console.log(replyUserData);
 
     const daysAgo = getDaysAgo(thread.created_at);
 
@@ -157,13 +157,11 @@ const Thread = () => {
     }
 
     const getLastNonEmptyName = (currentIndex) => {
-        // Iterate backward from currentIndex and find the last non-empty name
-        for (let i = currentIndex - 1; i >= 0; i--) {
+        for (let i = currentIndex; i >= 0; i--) {
             if (replyUserData[i]?.name) {
                 return replyUserData[i].name;
             }
         }
-        // If no non-empty name found, return an empty string
         return '';
     };
 
