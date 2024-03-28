@@ -76,37 +76,6 @@ const Thread = () => {
             });
     }, [id, repliesLastFetched]);
 
-    // const fetchReplies = () => {
-    //     setIsLoadingReplies(true);
-    //     const relevantReplies = null;
-    //     axios.get(`http://localhost:3001/reply`)
-    //         .then(response => {
-    //             relevantReplies = response.data.filter(reply => reply.thread_id.toString() === id);
-    //             setReply(relevantReplies);
-
-    //             const userPromises = relevantReplies.map(reply =>
-    //                 axios.get(`http://localhost:3001/user/${reply.user_id}`)
-    //             );
-
-    //             return Promise.all(userPromises);
-    //         })
-    //         .then(userResponses => {
-    //             // Process and map user data to replies
-    //             const usersData = userResponses.map((response, index) => ({
-    //                 ...response.data,
-    //                 reply_id: relevantReplies[index].reply_id
-    //             }));
-    //             setReplyUserData(usersData);
-    //         })
-    //         .catch(error => {
-    //             console.error('Error fetching detailed replies or user data:', error);
-    //         })
-    //         .finally(() => {
-    //             setIsLoadingReplies(false); // Loading is complete, regardless of success or failure
-    //         });
-    // };
-
-
     const handleSubmitReply = (event) => {
         event.preventDefault();
         setIsLoadingReplies(true);
@@ -155,6 +124,26 @@ const Thread = () => {
         }
     };
 
+    const handleLike = () => {
+        // Assuming `user.id` contains the current user's ID
+        const likeData = {
+            thread_id: id,
+            user_id: user.id,
+            time: new Date().toISOString().slice(0, 19).replace('T', ' ') // Formats current date to match your example
+        };
+
+        axios.post('http://localhost:3001/thread_like', likeData)
+            .then(response => {
+                console.log('Like added successfully:', response.data);
+                // Increment the like count. This assumes the server response is the newly added like record
+                setThreadLikeCount(prevCount => prevCount + 1);
+            })
+            .catch(error => {
+                console.error('Error adding like:', error);
+            });
+    };
+
+
     const daysAgo = getDaysAgo(thread.created_at);
 
     if (!thread) {
@@ -194,6 +183,7 @@ const Thread = () => {
                     <div className="col-3 col-md-3 text-end">
                         <strong>{daysAgo}</strong>
                         <p>{threadLikeCount} like(s)</p>
+                        <button className="btn btn-outline-primary btn-sm" onClick={handleLike}>Like</button>
                     </div>
                 </div>
             </div>
