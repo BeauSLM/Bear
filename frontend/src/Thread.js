@@ -77,63 +77,6 @@ const Thread = () => {
             });
     }, [id, repliesLastFetched]);
 
-    useEffect(() => {
-        setIsLoadingReplies(true);
-        axios.get(`http://localhost:3001/reply`)
-            .then(response => {
-                const relevantReplies = response.data.filter(reply => reply.thread_id.toString() === id);
-                setReply(relevantReplies);
-
-                const userPromises = relevantReplies.map(reply =>
-                    axios.get(`http://localhost:3001/user/${reply.user_id}`)
-                        .then(userResponse => ({
-                            ...userResponse.data,
-                            reply_id: reply.reply_id
-                        }))
-                );
-
-                console.log("USER", user.id);
-                const likeStatusPromises = relevantReplies.map(reply =>
-                    axios.get(`http://localhost:3001/reply_like/${id}/${reply.reply_id}/${user.id}`)
-                        .then(likeResponse => ({
-                            reply_id: reply.reply_id,
-                            liked: likeResponse.data.liked
-                        }))
-                        .catch(error => {
-                            console.log('Error fetching like status:', error);
-                            return { reply_id: reply.reply_id, liked: false };
-                        })
-                );
-
-                return Promise.all([...userPromises, ...likeStatusPromises]);
-            })
-            .then(allData => {
-                const splitIndex = reply.length;
-
-                const userDataResponses = allData.slice(0, splitIndex);
-                const likeStatusResponses = allData.slice(splitIndex);
-
-                const updatedReplyUserData = userDataResponses.map(item => item);
-                setReplyUserData(updatedReplyUserData);
-                const updatedReplyLikeCounts = likeStatusResponses.reduce((acc, item) => {
-                    acc[item.reply_id] = item.liked ? 1 : 0;
-                    return acc;
-                }, {});
-
-                setReplyLikeCounts(prevCounts => ({
-                    ...prevCounts,
-                    ...updatedReplyLikeCounts
-                }));
-
-                setIsLoadingReplies(false);
-            })
-
-            .catch(error => {
-                console.log('Error fetching replies or user data:', error);
-                setIsLoadingReplies(false);
-            });
-    }, [id, repliesLastFetched, user.id]);
-
 
 
     const handleSubmitReply = (event) => {
