@@ -448,6 +448,20 @@ app.get("/reply", async (req, res) => {
     }
 });
 
+// get all replies for a threadId
+app.get("/reply/:threadId", async (req, res) => {
+    const { threadId } = req.params;
+
+    try{
+        const replies = await db.select().from("reply").where({ thread_id: threadId })
+
+        res.json(replies);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error fetching replies by threadId");
+    }
+});
+
 // Read a specific reply by thread_id and reply_id
 app.get("/reply/:threadId/:replyId", async (req, res) => {
     const { threadId, replyId } = req.params;
