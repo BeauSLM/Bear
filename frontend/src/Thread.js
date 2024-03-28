@@ -4,11 +4,12 @@ import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import BackButton from './BackButton';
-
+import { useAuth } from './AuthContext';
 
 const Thread = () => {
 
     const { id } = useParams();
+    const { user, setUser } = useAuth();
 
     const [thread, setThread] = useState([]);
     const [threadUsersData, setThreadUsersData] = useState([]);
@@ -104,13 +105,24 @@ const Thread = () => {
         event.preventDefault();
         axios.post(`http://localhost:3001/reply`, {
             thread_id: id,
-            user_id: 1,
+            user_id: user.id,
             content: newReplyContent,
         })
             .then(response => {
                 console.log('Reply posted successfully');
                 setNewReplyContent('');
                 fetchReplies();
+                axios.get(`http://localhost:3001/user/${user.id}`)
+                    .then(response => {
+                        const userDataWithKey = { ...response.data, key: Date.now() };
+                        if (!replyUserData.find(userData => userData.id === userDataWithKey.id)) {
+                            setReplyUserData(prevUserData => [...prevUserData, userDataWithKey]);
+                        }
+                        console.log(replyUserData);
+                    })
+                    .catch(error => {
+                        console.log('Error fetching user data:', error);
+                    });
             })
             .catch(error => {
                 console.log('Error posting reply:', error);
@@ -122,7 +134,6 @@ const Thread = () => {
         const postDate = new Date(dateString);
         const today = new Date();
         const timeDiff = today - postDate + (6 * 60 * 60 * 1000);
-        console.log(timeDiff);
 
         if (timeDiff < 60000) {
             return "just now";
@@ -144,6 +155,17 @@ const Thread = () => {
     if (!thread) {
         return <div>Loading...</div>;
     }
+
+    const getLastNonEmptyName = (currentIndex) => {
+        // Iterate backward from currentIndex and find the last non-empty name
+        for (let i = currentIndex - 1; i >= 0; i--) {
+            if (replyUserData[i]?.name) {
+                return replyUserData[i].name;
+            }
+        }
+        // If no non-empty name found, return an empty string
+        return '';
+    };
 
 
     return (
@@ -191,7 +213,7 @@ const Thread = () => {
                                         <img src={person} width={50} height={50} alt="Profile" className="me-2" />
                                     </div>
                                     <div className="col-6 col-md-6">
-                                        <strong>by {replyUserData[0]?.name}</strong>
+                                        <strong>by {replyUserData[index]?.name || getLastNonEmptyName(index)}</strong>
                                         <p>RE: {reply.content}</p>
                                     </div>
                                     <div className="col-3 col-md-3 text-end">

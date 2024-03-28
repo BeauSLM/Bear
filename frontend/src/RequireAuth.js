@@ -7,7 +7,7 @@ const RequireAuth = ({ children }) => {
 
     console.log("Current Username: ", user);
 
-    if (!user || user === "Guest") {
+    if (!user) {
         return <Navigate to="/login" replace />;
     }
 
