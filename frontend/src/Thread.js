@@ -14,11 +14,14 @@ const Thread = () => {
     const [thread, setThread] = useState([]);
     const [threadUsersData, setThreadUsersData] = useState([]);
     const [threadLikeCount, setThreadLikeCount] = useState(0);
+    const [replyLikeCount, setReplyLikeCount] = useState(0);
     const [newReplyContent, setNewReplyContent] = useState('');
     const [isLoadingReplies, setIsLoadingReplies] = useState(true);
     const [repliesLastFetched, setRepliesLastFetched] = useState(Date.now());
     const [reply, setReply] = useState([]);
     const [replyUserData, setReplyUserData] = useState([]);
+    const [replyLikeCounts, setReplyLikeCounts] = useState({});
+
 
 
     useEffect(() => {
@@ -38,43 +41,100 @@ const Thread = () => {
             .catch(error => {
                 console.log('Error fetching user data:', error);
             });
+
         axios.get(`http://localhost:3001/thread_like/${id}`)
             .then(response => {
-                // Assuming the response is an array of likes
-                setThreadLikeCount(response.data.length); // Set the like count based on the number of items in the response
+                setThreadLikeCount(response.data.length);
             })
             .catch(error => {
                 console.log('Error fetching like count:', error);
             });
     }, [id]);
 
-
-
     useEffect(() => {
-        setIsLoadingReplies(true); // Start loading when component mounts or `id` changes
+        setIsLoadingReplies(true);
         axios.get(`http://localhost:3001/reply`)
             .then(response => {
                 const relevantReplies = response.data.filter(reply => reply.thread_id.toString() === id);
-                setReply(relevantReplies); // Keep just the replies in their state
+                setReply(relevantReplies);
 
                 const userPromises = relevantReplies.map(reply =>
                     axios.get(`http://localhost:3001/user/${reply.user_id}`).then(userResponse => ({
                         ...userResponse.data,
-                        reply_id: reply.reply_id // Associate user data with the reply ID
+                        reply_id: reply.reply_id
                     }))
                 );
 
                 return Promise.all(userPromises);
             })
             .then(usersData => {
-                setReplyUserData(usersData); // This now contains unique entries per reply, not per user
-                setIsLoadingReplies(false); // Loading complete
+                setReplyUserData(usersData);
+                setIsLoadingReplies(false);
             })
             .catch(error => {
                 console.log('Error fetching replies or user data:', error);
-                setIsLoadingReplies(false); // Ensure loading is false even if there's an error
+                setIsLoadingReplies(false);
             });
     }, [id, repliesLastFetched]);
+
+    useEffect(() => {
+        setIsLoadingReplies(true);
+        axios.get(`http://localhost:3001/reply`)
+            .then(response => {
+                const relevantReplies = response.data.filter(reply => reply.thread_id.toString() === id);
+                setReply(relevantReplies);
+
+                const userPromises = relevantReplies.map(reply =>
+                    axios.get(`http://localhost:3001/user/${reply.user_id}`)
+                        .then(userResponse => ({
+                            ...userResponse.data,
+                            reply_id: reply.reply_id
+                        }))
+                );
+
+                console.log("USER", user.id);
+                const likeStatusPromises = relevantReplies.map(reply =>
+                    axios.get(`http://localhost:3001/reply_like/${id}/${reply.reply_id}/${user.id}`)
+                        .then(likeResponse => ({
+                            reply_id: reply.reply_id,
+                            liked: likeResponse.data.liked
+                        }))
+                        .catch(error => {
+                            console.log('Error fetching like status:', error);
+                            return { reply_id: reply.reply_id, liked: false };
+                        })
+                );
+
+                return Promise.all([...userPromises, ...likeStatusPromises]);
+            })
+            .then(allData => {
+                const splitIndex = reply.length;
+
+                const userDataResponses = allData.slice(0, splitIndex);
+                const likeStatusResponses = allData.slice(splitIndex);
+
+                const updatedReplyUserData = userDataResponses.map(item => item);
+                setReplyUserData(updatedReplyUserData);
+                const updatedReplyLikeCounts = likeStatusResponses.reduce((acc, item) => {
+                    acc[item.reply_id] = item.liked ? 1 : 0;
+                    return acc;
+                }, {});
+
+                setReplyLikeCounts(prevCounts => ({
+                    ...prevCounts,
+                    ...updatedReplyLikeCounts
+                }));
+
+                setIsLoadingReplies(false);
+            })
+
+            .catch(error => {
+                console.log('Error fetching replies or user data:', error);
+                setIsLoadingReplies(false);
+            });
+    }, [id, repliesLastFetched, user.id]);
+
+
 
     const handleSubmitReply = (event) => {
         event.preventDefault();
@@ -90,7 +150,7 @@ const Thread = () => {
                 setReply(prevReplies => [...prevReplies, newReply]);
                 setReplyUserData(prevUserData => [...prevUserData, { ...user, reply_id: newReply.reply_id }]);
                 setNewReplyContent('');
-                setRepliesLastFetched(Date.now()); // Trigger the useEffect to refetch replies
+                setRepliesLastFetched(Date.now());
             })
 
             .catch(error => {
@@ -101,9 +161,6 @@ const Thread = () => {
                 setIsLoadingReplies(false);
             });
     };
-
-
-    console.log(replyUserData);
 
 
     const getDaysAgo = (dateString) => {
@@ -125,23 +182,50 @@ const Thread = () => {
     };
 
     const handleLike = () => {
-        // Assuming `user.id` contains the current user's ID
         const likeData = {
             thread_id: id,
             user_id: user.id,
-            time: new Date().toISOString().slice(0, 19).replace('T', ' ') // Formats current date to match your example
+            time: new Date().toISOString().slice(0, 19).replace('T', ' ')
         };
 
         axios.post('http://localhost:3001/thread_like', likeData)
             .then(response => {
                 console.log('Like added successfully:', response.data);
-                // Increment the like count. This assumes the server response is the newly added like record
                 setThreadLikeCount(prevCount => prevCount + 1);
             })
             .catch(error => {
                 console.error('Error adding like:', error);
             });
+
+
     };
+    const handleReplyLike = (replyId) => {
+        // Check if the reply is already liked by the user
+        if (replyLikeCounts[replyId]) {
+            console.log('Already liked');
+            return; // Stop if the reply is already liked
+        }
+
+        const likeData = {
+            reply_id: replyId,
+            user_id: user.id,
+            time: new Date().toISOString().slice(0, 19).replace('T', ' ')
+        };
+
+        axios.post('http://localhost:3001/reply_like', likeData)
+            .then(() => {
+                console.log('Like added successfully');
+                // Only set the like count to 1 here, indicating the reply is liked
+                setReplyLikeCounts(prevCounts => ({
+                    ...prevCounts,
+                    [replyId]: 1 // Set to 1 instead of incrementing
+                }));
+            })
+            .catch(error => {
+                console.error('Error adding like:', error);
+            });
+    };
+
 
 
     const daysAgo = getDaysAgo(thread.created_at);
@@ -191,7 +275,6 @@ const Thread = () => {
             {/* REPLYS */}
             <div className="card-body p-2">
                 <div className="row align-items-center">
-
                     <div className="col-12 col-md-12 border-start">
                         {!isLoadingReplies && reply.map((reply, index) => (
                             <div key={reply.reply_id} className="card-body p-2 border-top">
@@ -200,22 +283,21 @@ const Thread = () => {
                                         <img src={person} width={50} height={50} alt="Profile" className="me-2" />
                                     </div>
                                     <div className="col-6 col-md-6">
-                                        {/* Safe access using optional chaining */}
                                         <strong>by {replyUserData.find(user => user.reply_id === reply.reply_id)?.name || 'Loading...'}</strong>
                                         <p>RE: {reply.content}</p>
                                     </div>
                                     <div className="col-3 col-md-3 text-end">
                                         <strong>{getDaysAgo(reply.created_at)}</strong>
+                                        <p>{replyLikeCounts[reply.reply_id] || 0} like(s)</p>
+                                        <button className="btn btn-outline-primary btn-sm" onClick={() => handleReplyLike(reply.reply_id)}>Like</button>
                                     </div>
                                 </div>
                             </div>
                         ))}
-
-
                     </div>
-
                 </div>
             </div>
+
 
             <div className="card-footer">
                 <form onSubmit={handleSubmitReply}>
@@ -231,7 +313,7 @@ const Thread = () => {
                     <button type="submit" className="btn btn-primary">Post Reply</button>
                 </form>
             </div>
-        </div>
+        </div >
     );
 };
 
