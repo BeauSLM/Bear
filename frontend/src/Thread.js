@@ -184,33 +184,33 @@ const Thread = () => {
 
     const daysAgo = getDaysAgo(thread.created_at);
 
-    const fetchRepliesWithLikes = async (threadId) => {
-        try {
-            const repliesResponse = await axios.get(`http://localhost:3001/reply/${threadId}`);
-            const replies = repliesResponse.data;
+    // const fetchRepliesWithLikes = async (threadId) => {
+    //     try {
+    //         const repliesResponse = await axios.get(`http://localhost:3001/reply/${threadId}`);
+    //         const replies = repliesResponse.data;
 
-            const repliesWithLikesPromises = replies.map(async (reply) => {
-                const replyLikesResponse = await axios.get(`http://localhost:3001/reply_like/${id}/${reply.reply_id}`);
-                console.log(replyLikesResponse)
-                const likeCount = replyLikesResponse.data.length;
-                return { ...reply, likeCount };
-            });
+    //         const repliesWithLikesPromises = replies.map(async (reply) => {
+    //             const replyLikesResponse = await axios.get(`http://localhost:3001/reply_like/${id}/${reply.reply_id}`);
+    //             console.log(replyLikesResponse)
+    //             const likeCount = replyLikesResponse.data.length;
+    //             return { ...reply, likeCount };
+    //         });
 
-            const repliesWithLikes = await Promise.all(repliesWithLikesPromises);
-            return repliesWithLikes;
+    //         const repliesWithLikes = await Promise.all(repliesWithLikesPromises);
+    //         return repliesWithLikes;
 
-        } catch (error) {
-            console.error('Error fetching replies with like counts:', error);
-            return [];
-        }
-    };
+    //     } catch (error) {
+    //         console.error('Error fetching replies with like counts:', error);
+    //         return [];
+    //     }
+    // };
 
-    const [repliesWithLikes, setRepliesWithLikes] = useState([]);
+    // const [repliesWithLikes, setRepliesWithLikes] = useState([]);
 
-    useEffect(() => {
-        fetchRepliesWithLikes(id)
-            .then(data => setRepliesWithLikes(data));
-    }, [id]);
+    // useEffect(() => {
+    //     fetchRepliesWithLikes(id)
+    //         .then(data => setRepliesWithLikes(data));
+    // }, [id]);
 
 
     if (!thread) {
@@ -259,7 +259,7 @@ const Thread = () => {
             <div className="card-body p-2">
                 <div className="row align-items-center">
                     <div className="col-12 col-md-12 border-start">
-                        {!isLoadingReplies && repliesWithLikes.map((reply) => (
+                        {!isLoadingReplies && reply.map((reply) => (
                             <div key={reply.reply_id} className="card-body p-2 border-top">
                                 <div className="row align-items-center">
                                     <div className="col-3 col-md-3 d-flex align-items-center">
@@ -271,7 +271,6 @@ const Thread = () => {
                                     </div>
                                     <div className="col-3 col-md-3 text-end">
                                         <strong>{getDaysAgo(reply.created_at)}</strong>
-                                        <button className="btn btn-outline-primary btn-sm" onClick={() => handleReplyLike(reply.reply_id)}>Like</button>
                                     </div>
                                 </div>
                             </div>
